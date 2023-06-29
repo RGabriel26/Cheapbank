@@ -7,15 +7,25 @@ public class Account {
 	public String firsName;
 	public String nationality;
 	public int phoneNumber;
+	public String email;
 	
-	public Account(int idCnp, String lastName, String firsName, String nationality, int phoneNumber) {
+	public Account(int idCnp, String email, String lastName, String firsName, String nationality, int phoneNumber) {
 		this.idCnp = idCnp;
 		this.lastName = lastName;
 		this.firsName = firsName;
 		this.nationality = nationality;
 		this.phoneNumber = phoneNumber;
+		this.email = email;
 	}
 	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public int getAge() {
 		int age = 0;
 		return age;
