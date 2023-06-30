@@ -1,19 +1,19 @@
 package cp.bank;
 
 public class BankAccount {
-	long sold;
-	int iD;
+	double sold;
+	long iD;
 	String lastName;
 	String firstName;
 	
-	public BankAccount(long sold, int iD, String lastName, String firstName) {
+	public BankAccount(double sold, long iD, String lastName, String firstName) {
 		this.sold = sold;
 		this.iD = iD;
 		this.lastName = lastName;
 		this.firstName = firstName;
 	}
 
-	public long getSold() {
+	public double getSold() {
 		return sold;
 	}
 
