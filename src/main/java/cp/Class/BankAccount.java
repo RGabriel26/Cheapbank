@@ -1,4 +1,4 @@
-package cp.bank;
+package cp.Class;
 
 public class BankAccount {
 	double sold;

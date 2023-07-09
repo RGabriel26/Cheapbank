@@ -1,4 +1,4 @@
-package cp.bank;
+package cp.Class;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -32,7 +32,7 @@ public class Account {
 		int year;
         int month;
         int day;
-        String cnp = String.valueOf(idCnp);
+        String cnp = String.valueOf(this.idCnp);
 
         if (cnp.length() == 13) {
             year = Integer.parseInt(cnp.substring(1, 3));

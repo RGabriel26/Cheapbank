@@ -1,0 +1,98 @@
+body {
+	background-color: #22e3c7;
+}
+
+.container {
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	margin-top: 2.5rem;
+	align-content: center;
+}
+
+.loginZone {
+	border-radius: 2rem;
+	background-color: #1ac8ad;
+	display: flex;
+	justify-content: right;
+	align-content: center;
+	flex-direction: column;
+	display: flex;
+	width: 20rem;
+	height: 25rem;
+}
+
+.registerZone {
+	margin-left: 0.1rem;
+	border-radius: 2rem;
+	background-color: #1ac8ad;
+	display: flex;
+	justify-content: right;
+	align-content: center;
+	flex-direction: column;
+	display: flex;
+	width: 20rem;
+	height: 25rem;
+}
+
+.login-button {
+	border-radius: 2rem 2rem 0.5rem 0.5rem;
+	background-color: #4CAF50;
+	border: none;
+	color: white;
+	padding: 1rem 3.5rem;
+	width: 98.5%;
+	text-decoration: none;
+	font-size: 16px;
+	margin: 4px 2px;
+	transition-duration: 0.4s;
+	cursor: pointer;
+	text-align: center;
+}
+
+.login-button:hover {
+	background-color: #189e18;
+	color: white;
+}
+
+.login-button:active {
+	background-color: #189e18;
+	transform: translateY(4px);
+}
+
+.register-button {
+	border-radius: 2rem 2rem 0.5rem 0.5rem;
+	background-color: #4CAF50;
+	border: none;
+	color: white;
+	padding: 1rem 3.5rem;
+	width: 98.5%;
+	text-decoration: none;
+	font-size: 16px;
+	margin: 4px 2px;
+	transition-duration: 0.4s;
+	cursor: pointer;
+	text-align: center;
+}
+
+.register-button:hover {
+	background-color: #ff2424;
+	color: white;
+}
+
+.register-button:active {
+	background-color: #ff2424;
+	transform: translateY(4px);
+}
+
+.bankLogo {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+}
+
+.bankLogo img {
+	width: 40rem;
+	height: 15rem;
+	}

@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>CheapBank</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link th:href="@{homePageFiles/homePages.css}" rel="stylesheet">
+</head>
+<body>
+	<div class="bankLogo">
+		<img alt="bankLogo" src="images/bankLogo.png">
+	</div>
+	<div class="container">
+		<div class="loginZone">
+			<form action="#" th:action="@{/loginPage}" method="get">
+				<input type="submit" th:value="Login" class="login-button">
+			</form>
+			<div>
+				<img style="width: 100%;" alt="loginPhoto" src="images/loginPhoto.png">
+			</div>
+		</div>
+		<div class="registerZone">
+			<form action="#" th:action="@{/registerPage}" method="get">
+				<input type="submit" th:value="Register" class="register-button">
+			</form>
+			<img style="width: 95%; margin: 0.5rem;"
+				alt="registerPhoto" src="images/registerPhoto.png">
+		</div>
+	</div>
+</body>
+</html>
