@@ -6,7 +6,7 @@ body {
 	display: flex;
 	justify-content: center;
 	align-content: center;
-	margin-top: 2.5rem;
+	margin-top: 1rem;
 	align-content: center;
 }
 
@@ -89,10 +89,11 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-
+	left: 0px !important;
+	position: static !important;
 }
 
 .bankLogo img {
 	width: 40rem;
-	height: 15rem;
-	}
+	height: auto;
+}

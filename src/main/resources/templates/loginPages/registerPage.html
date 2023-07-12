@@ -10,16 +10,32 @@
 		<a href="/home"><img alt="bankLogo" src="images/bankLogo.png"></a>
 	</div>
 	<div class="container">
-		<div class="loginZone" style="width: 50rem; height: 30rem; flex-direction: row ">
-			<form action="#" th:action="@{/loginPage}" method="get" style=" width: 15rem">
-				<input type="submit" th:value="Login" class="login-button"
-				style="padding: 1rem 3.5rem; 	border-radius: 2rem 0.5rem 0.5rem 0.5rem;
-				">
-			</form>
-			<form action="#" th:action="@{/registerPage}" method="get" style=" width: 35rem ">
-				<input type="submit" th:value="Register" class="register-button"
-					style="border-radius: 0.5rem 2rem 0.5rem 0.5rem;">
-			</form>
+		<div class="loginZone" style="width: 50rem; height: 30rem">
+			<div style="display: flex; flex-direction: row;">
+				<form action="#" th:action="@{/loginPage}" method="get"
+					style="width: 15rem">
+					<input type="submit" th:value="Login" class="login-button"
+						style="padding: 1rem 3.5rem; border-radius: 2rem 0.5rem 0.5rem 0.5rem;">
+				</form>
+				<form action="#" th:action="@{/registerPage}" method="get"
+					style="width: 35rem">
+					<input type="submit" th:value="Register" class="register-button"
+						style="border-radius: 0.5rem 2rem 0.5rem 0.5rem;">
+				</form>
+			</div>
+			<div>
+				<form action="#" th:action="@{/registrationUser}"
+					th:object="${userRegistration}" method="post">
+
+					<p>First name:<input type="text" th:field="*{firstName}" /></p>
+					<p>Last name:<input type="text" th:field="*{lastName}" /></p>
+					<p>CNP:<input type="number" th:field="*{idCnp}"/></p>
+					<p>Email:<input type="email" th:field="*{email}" /></p>
+					<p>Phone number:<input type="number" th:field="*{phoneNumber}" /></p>
+					<input type="submit" id="registerButton" th:value="REGISTER" />
+
+				</form>
+			</div>
 		</div>
 	</div>
 </body>

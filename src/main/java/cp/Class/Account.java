@@ -6,20 +6,21 @@ import java.time.Period;
 public class Account {
 	public long idCnp;
 	public String lastName;
-	public String firsName;
-	public String nationality;
-	public int phoneNumber;
+	public String firstName;
+	public String phoneNumber;
 	public String email;
 	
-	public Account(long idCnp, String email, String lastName, String firsName, String nationality, int phoneNumber) {
+	public Account(String firstName, String lastName, long idCnp, String email, String phoneNumber) {
 		this.idCnp = idCnp;
 		this.lastName = lastName;
-		this.firsName = firsName;
-		this.nationality = nationality;
+		this.firstName = firstName;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 	}
 	
+		public Account() {
+	}
+		
 	public String getEmail() {
 		return email;
 	}
@@ -69,7 +70,7 @@ public class Account {
 		return idCnp;
 	}
 
-	public void setIdCnp(int idCnp) {
+	public void setIdCnp(long idCnp) {
 		this.idCnp = idCnp;
 	}
 
@@ -81,29 +82,26 @@ public class Account {
 		this.lastName = lastName;
 	}
 
-	public String getFirsName() {
-		return firsName;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setFirsName(String firsName) {
-		this.firsName = firsName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getNationality() {
-		return nationality;
-	}
-
-	public void setNationality(String nationality) {
-		this.nationality = nationality;
-	}
-
-	public int getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(int phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Account [idCnp=" + idCnp + ", lastName=" + lastName + ", firstName=" + firstName + ", phoneNumber="
+				+ phoneNumber + ", email=" + email + "]";
+	}
 
 }
