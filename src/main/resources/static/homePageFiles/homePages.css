@@ -93,7 +93,18 @@ body {
 	position: static !important;
 }
 
-.bankLogo img {
+.bankLogo input {
 	width: 40rem;
 	height: auto;
+}
+
+.infoMessage p{
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	color: red;
+	
+	font-weight: bold;
+	font-size: 1.5rem;
+	
 }

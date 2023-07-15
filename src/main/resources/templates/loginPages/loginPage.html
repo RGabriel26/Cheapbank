@@ -4,11 +4,12 @@
 <title>Login-CheapBank</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link th:href="@{homePageFiles/homePages.css}" rel="stylesheet">
+<script src="homePageFiles/onlynum.js"></script>
 </head>
 <body>
-	<div class="bankLogo">
-		<a href="/home"><img alt="bankLogo" src="images/bankLogo.png"></a>
-	</div>
+	<form class="bankLogo" th:action="@{/home}" method="get">
+		<input type="image" alt="bankLogo" src="images/bankLogo.png">
+	</form>
 	<div class="container">
 		<div class="loginZone" style="width: 50rem; height: 30rem">
 			<div style="display: flex; flex-direction: row;">
@@ -25,10 +26,25 @@
 			</div>
 			<div>
 
+
+
+				<div class="infoMessage">
+					<p th:text="${succesRegistrationMessage}"></p>
+				</div>
+
+
+
 				<form action="#" th:action="@{/inputUser}" th:object="${userLogin}"
 					method="post">
-					<p>Username/ID/email: <input type="text" th:field="*{userName}" placeholder="Username/ID/Email" /></p>
-					<p>Password: <input type="password" th:field="*{passwordUser}" placeholder="Password" /></p>
+					<p>
+						ID: <input type="text" name="passkey" id="num"
+							oninput="return onlynum()" maxlength="13" th:field="*{userID}"
+							placeholder="ID" />
+					</p>
+					<p>
+						Password: <input type="password" th:field="*{passwordUser}"
+							placeholder="Password" />
+					</p>
 					<input type="submit" id="loginButton" th:value="LOGIN" />
 				</form>
 			</div>

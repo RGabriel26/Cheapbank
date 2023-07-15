@@ -6,9 +6,9 @@
 <link th:href="@{homePageFiles/homePages.css}" rel="stylesheet">
 </head>
 <body>
-	<div class="bankLogo">
-		<a href="/home"><img alt="bankLogo" src="images/bankLogo.png"></a>
-	</div>
+	<form class="bankLogo"th:action="@{/home}" method="get">
+	<input  type="image" alt="bankLogo" src="images/bankLogo.png">
+	</form>
 	<div class="container">
 		<div class="loginZone">
 			<form action="#" th:action="@{/loginPage}" method="get">

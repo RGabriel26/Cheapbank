@@ -1,23 +1,24 @@
-package cp.Class;
+package cp.bank;
 
 public class UserLogin {
-	public String userName;
+	public Long userID;
 	public String passwordUser;
 	
-	public UserLogin(String userName, String passwordUser) {
-		this.userName = userName;
+	public UserLogin(Long userID, String passwordUser) {
+		this.userID = userID;
 		this.passwordUser = passwordUser;
 	}
 
 	public UserLogin() {
 	}
 
-	public String getUserName() {
-		return userName;
+
+	public Long getUserID() {
+		return userID;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUserID(Long userID) {
+		this.userID = userID;
 	}
 
 	public String getPasswordUser() {
