@@ -13,7 +13,7 @@ public class IstoricTransfers {
 	public List<String> transactions;
 	
 	public IstoricTransfers(Long iD, List<String> transactions) {
-		super();
+
 		ID = iD;
 		this.transactions = transactions;
 	}

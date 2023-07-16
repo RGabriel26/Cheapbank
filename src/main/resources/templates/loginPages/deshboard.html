@@ -39,8 +39,16 @@
 					Utilizator: <span th:text="${info_name}"></span>
 				</p>
 			</div>
-			<div class="interior_aspect_child" style="height: 70%;">
-				istoric tranzactii</div>
+			<div class="interior_aspect_child"
+				style="width: auto; height: 70%; overflow-x: scroll !important; overflow-y: scroll; white-space: nowrap;">
+				<p style="text-align: center;">Transaction history:</p>
+				<!-- LISTAREA TRANZACTIILOR -->
+				<div>
+					<p th:each="list : ${listTransaction}">
+						&#128184;<span th:text="${list}"></span>
+					</p>
+				</div>
+			</div>
 		</div>
 		<!-- PROBLEMA: INALTIMEA DIVURILE NU SUNT LIPITE DE DIVUL DIN CARE FAC PARTE -->
 		<div class="infoMid">
@@ -48,12 +56,14 @@
 				Balance: <span th:text="${info_sold}"></span> $
 			</div>
 			<div>
-				<p class="interior_aspect_child" style="height: auto; display: flex; justify-content: center;" th:text="${warning_transfer}"></p>
+				<p class="interior_aspect_child"
+					style="height: auto; display: flex; justify-content: center;"
+					th:text="${warning_transfer}"></p>
 			</div>
 			<p style="text-align: center;">Transfer</p>
 			<div class="interior_aspect_child" style="height: 58%;">
-				<form action="#" th:action="@{/transfer_from_deshboard}" th:object="${transfer}"
-					method="post">
+				<form action="#" th:action="@{/transfer_from_deshboard}"
+					th:object="${transfer}" method="post">
 					<div>
 						CNP: <input type="text"
 							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
@@ -74,8 +84,15 @@
 			</div>
 		</div>
 		<div class="infoRight">
-			<p class="interior_aspect_child" style="height: 10%">Last transfer</p>
-			<div class="interior_aspect_child" style="height: 80%">persoane</div>
+			<p class="interior_aspect_child" style="height: 10%">Last
+				transfer:</p>
+			<div class="interior_aspect_child" style="width: auto; height: 80%; overflow-x: scroll !important; overflow-y: scroll; white-space: nowrap;">
+				<div>
+					<p th:each="list : ${listAccounts}">
+						&#128100;<span th:text="${list}"></span>
+					</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>

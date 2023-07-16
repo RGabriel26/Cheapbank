@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -20,10 +21,16 @@ public class AppBankController {
 	@Autowired
 	public AccountRepository accountRepo;
 	@Autowired
-	public IstoricRepository istoricRepo;
+	public IstoricTransferRepository istoricRepo;
+	@Autowired
+	public IstoricAccountsRepository istoricAccoutsRepo;
 
 	@GetMapping("")
 	public String home() {
+		return "loginPages/home";
+	}
+	@GetMapping("/home")
+	public String home1() {
 		return "loginPages/home";
 	}
 
@@ -145,7 +152,11 @@ public class AppBankController {
 		model.addAttribute("info_name", accountRepo.findById(persoanaLogata).get().firstName + " " + accountRepo.findById(persoanaLogata).get().lastName);
 		model.addAttribute("info_sold", accountRepo.findById(persoanaLogata).get().getSold());
 		model.addAttribute("transfer", new TransferToAccout());
-		System.out.println(persoanaLogata);
+		if(istoricRepo.existsById(persoanaLogata))
+			model.addAttribute("listTransaction", istoricRepo.findById(persoanaLogata).get().getTransactions());
+		if(istoricAccoutsRepo.existsById(persoanaLogata))
+			model.addAttribute("listAccounts", istoricAccoutsRepo.findById(persoanaLogata).get().getIstoricAccounts());
+		System.out.println("Persoana logata: " + persoanaLogata);
 		return "loginPages/deshboard.html";
 	}
 
@@ -253,6 +264,10 @@ public class AppBankController {
 	}
 
 	private void logicTransfer(Long transferto_ID, Double amountTransfer) {
+		//provenienta banilor
+		String typeTransaction = "Transfer";
+		List<String> newLTransferRepo;
+		List<String> newAccountRepo;
 		//adaugare suma in contul beneficiar
 		Account newAccount_beneficiar = new Account();
 		newAccount_beneficiar.setEmail(accountRepo.findById(transferto_ID).get().email);
@@ -274,10 +289,63 @@ public class AppBankController {
 		newAccount_expeditor.setPhoneNumber(accountRepo.findById(persoanaLogata).get().phoneNumber);
 		newAccount_expeditor.setSold((accountRepo.findById(persoanaLogata).get().getSold()) - amountTransfer);
 		accountRepo.save(newAccount_expeditor);
-		
+
 		//salvarea informatiilor despre tranzactie in IstoricRepository
-		String tipTransaction = "";
-		String infoTransaction = "";
+		String infoTransaction = typeTransaction + ": [" + persoanaLogata +"]=> "
+				+ newAccount_expeditor.firstName + " " + newAccount_expeditor.lastName
+				+" transferred " + amountTransfer +"$ to: " +"[" + transferto_ID +"]=> " + newAccount_beneficiar.firstName 
+				+ " " + newAccount_beneficiar.lastName + "  ";
+		if(istoricRepo.existsById(persoanaLogata)) {
+			newLTransferRepo = new LinkedList<>(istoricRepo.findById(persoanaLogata).get().getTransactions());
+
+		}else {
+			newLTransferRepo = new LinkedList<>();
+		}
+		newLTransferRepo.add(infoTransaction);
+		istoricRepo.save(new IstoricTransfers(persoanaLogata, newLTransferRepo));
+
+		//salvare persoana in istoricAccountsRepository - conturile cu care s-a interactionat in transferuri
+		String saveAccount = "[" + transferto_ID + "] => " + newAccount_beneficiar.firstName 
+				+ " " + newAccount_beneficiar.lastName + "  " ;
+
+		if(istoricAccoutsRepo.existsById(persoanaLogata)) {
+			newAccountRepo = new LinkedList<>(istoricAccoutsRepo.findById(persoanaLogata).get().getIstoricAccounts());
+			newAccountRepo.add(saveAccount);
+			istoricAccoutsRepo.save(new IstoricAccounts(persoanaLogata, newAccountRepo));
+		}else {
+			for(IstoricAccounts acc: istoricAccoutsRepo.findAll()) {
+				if(!acc.getIstoricAccounts().contains(Long.toString(transferto_ID))) {
+					newAccountRepo = new LinkedList<>();
+					newAccountRepo.add(saveAccount);
+					istoricAccoutsRepo.save(new IstoricAccounts(persoanaLogata, newAccountRepo));
+				}
+				
+			}
+			
+		}
+
+//		for(IstoricAccounts acc: istoricAccoutsRepo.findAll()) {
+//			if(acc.getIstoricAccounts().contains(Long.toString(transferto_ID))) {
+//				if(istoricAccoutsRepo.existsById(persoanaLogata)) {
+//					newAccountRepo = new LinkedList<>(istoricAccoutsRepo.findById(persoanaLogata).get().getIstoricAccounts());
+//				}else {
+//					newAccountRepo = new LinkedList<>();
+//				}
+//				newAccountRepo.add(saveAccount);
+//				istoricAccoutsRepo.save(new IstoricAccounts(persoanaLogata, newAccountRepo));
+//			}
+//		}
+
+		//		if(!saveAccount.contains(Long.toString(transferto_ID))) {
+		//			if(istoricAccoutsRepo.existsById(persoanaLogata)) {
+		//				newAccountRepo = new LinkedList<>(istoricAccoutsRepo.findById(persoanaLogata).get().getIstoricAccounts());
+		//			}else {
+		//				newAccountRepo = new LinkedList<>();
+		//			}
+		//			newAccountRepo.add(saveAccount);
+		//			istoricAccoutsRepo.save(new IstoricAccounts(persoanaLogata, newAccountRepo));
+		//		}
+		//	}
 	}
 
 
