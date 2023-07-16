@@ -3,27 +3,25 @@ package cp.bank;
 import java.time.LocalDate;
 import java.time.Period;
 
-import org.springframework.stereotype.Component;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
-@Component
 @Entity
 public class Account {
-	
+
 	@Id
 	public Long idCnp;
 	public String lastName;
 	public String firstName;
 	public String phoneNumber;
-	
+
 	public String email;
 	private String password;
 
 	private Double sold = 0d;
 
-	public Account(String firstName, String lastName, Long idCnp, String email, String phoneNumber) {
+
+	public Account( Long idCnp, String email, String firstName, String lastName,String phoneNumber) {
 		this.idCnp = idCnp;
 		this.lastName = lastName;
 		this.firstName = firstName;
@@ -32,10 +30,8 @@ public class Account {
 	}
 
 	public Account() {
+		super();
 	}
-
-
-
 
 	public Double getSold() {
 		return sold;

@@ -45,14 +45,13 @@
 						Password:<input type="password" th:field="*{password}" />
 					</p>
 					<p>
-						CNP:<input type="text" name="passkey" id="num"
-							oninput="return onlynum()" maxlength="13" th:field="*{idCnp}" />
+						CNP:<input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="13" th:field="*{idCnp}" />
 					</p>
 					<p>
 						Email:<input type="email" th:field="*{email}" />
 					</p>
 					<p>
-						Phone number:<input type="number" th:field="*{phoneNumber}" />
+						Phone number:<input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" th:field="*{phoneNumber}" />
 					</p>
 					<input type="submit" id="registerButton" th:value="REGISTER" />
 
@@ -60,6 +59,5 @@
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>

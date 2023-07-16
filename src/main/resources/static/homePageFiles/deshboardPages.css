@@ -1,0 +1,81 @@
+* {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+html{
+	height: 100%;
+}
+
+body {
+	background-color: #22e3c7;
+	height: 100%;
+	width: auto;
+	margin: 1rem;
+}
+
+/*ZONA DE BUTOANE DE NAVIGARE*/
+
+.imageButton {
+	width: auto;
+	height: 4rem;
+}
+
+.buttonZone {
+	height: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: raw;
+}
+
+.transferDeshButton {
+	margin-left: auto;
+	margin-right: 1rem;
+}
+
+.profilDeshButton {
+	margin-right: 1rem;
+}
+
+.logoutDeshButton {
+	position: relative;
+}
+
+/*ZONA DE CONTINUT A PAGINII*/
+
+.infoLeft {
+	background-color: #1bcfb5;
+	height: 100%;
+	width: 25%;
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
+	border-radius: 1rem 1rem 1rem 1rem;
+}
+
+.infoMid {
+	width: 50%;
+	background-color: #1bcfb5;
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
+	border-radius: 1rem;
+	padding: 0.5rem;
+}
+
+.infoRight {
+	height: 100%;
+	width: 25%;
+	background-color: #1bcfb5;
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
+	border-radius: 1rem;
+}
+
+.interior_aspect_child{
+	background-color: #18bea6;
+	margin: 0.5rem;
+	padding: 0.5rem; 
+	height: 20%;
+	border-radius: 1rem;
+}

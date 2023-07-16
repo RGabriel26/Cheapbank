@@ -3,11 +3,80 @@
 <head>
 <title>DeshBoard-CheapBank</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link th:href="@{homePageFiles/homePages.css}" rel="stylesheet">
+<link th:href="@{homePageFiles/deshboardPages.css}" rel="stylesheet">
 </head>
 <body>
-	<div>
-		<p th:text="${info}"></p>
+	<!-- ZONA DE BUTOANE PRINCIPALE DE PE PAGINA -->
+	<div class="buttonZone">
+		<div class="homeDeshButtton">
+			<form th:action="@{/deshboard}" method="get">
+				<input class="imageButton" type="image" alt="bankLogo"
+					src="images/bankLogo.png">
+			</form>
+		</div>
+		<div class="transferDeshButton">
+			<form th:action="@{/transfer}" method="get">
+				<input type="submit" value="Transfer">
+			</form>
+		</div>
+		<div class="profilDeshButton">
+			<form th:action="@{/profil}" method="get">
+				<input type="submit" value="Profil">
+			</form>
+		</div>
+		<div class="logoutDeshButton">
+			<form th:action="@{/logOut}" method="get">
+				<input type="submit" value="Logout">
+			</form>
+		</div>
+	</div>
+
+	<!-- ZONA DE CONTENT A DESHBORDULUI -->
+	<div style="display: flex; margin: 1rem; height: 85%">
+		<div class="infoLeft">
+			<div class="interior_aspect_child">
+				<p>
+					Utilizator: <span th:text="${info_name}"></span>
+				</p>
+			</div>
+			<div class="interior_aspect_child" style="height: 70%;">
+				istoric tranzactii</div>
+		</div>
+		<!-- PROBLEMA: INALTIMEA DIVURILE NU SUNT LIPITE DE DIVUL DIN CARE FAC PARTE -->
+		<div class="infoMid">
+			<div class="interior_aspect_child">
+				Balance: <span th:text="${info_sold}"></span> $
+			</div>
+			<div>
+				<p class="interior_aspect_child" style="height: auto; display: flex; justify-content: center;" th:text="${warning_transfer}"></p>
+			</div>
+			<p style="text-align: center;">Transfer</p>
+			<div class="interior_aspect_child" style="height: 58%;">
+				<form action="#" th:action="@{/transfer_to}" th:object="${transfer}"
+					method="post">
+					<div>
+						CNP: <input type="text"
+							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+							maxlength="13" th:field="*{transfer_toID}" />
+					</div>
+					<div>
+						AMOUND: <input type="text"
+							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+							maxlength="13" th:field="*{amound_toID}" />
+					</div>
+					<div>
+						<input type="submit" th:value="TRANSFER" />
+					</div>
+					<div>
+						<input type="reset" th:value="RESET" />
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="infoRight">
+			<p class="interior_aspect_child" style="height: 10%">Last transfer</p>
+			<div class="interior_aspect_child" style="height: 80%">persoane</div>
+		</div>
 	</div>
 </body>
 </html>

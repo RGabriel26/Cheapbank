@@ -7,17 +7,20 @@
 <script src="homePageFiles/onlynum.js"></script>
 </head>
 <body>
+	<!-- banner ul site ului -->
 	<form class="bankLogo" th:action="@{/home}" method="get">
 		<input type="image" alt="bankLogo" src="images/bankLogo.png">
 	</form>
 	<div class="container">
 		<div class="loginZone" style="width: 50rem; height: 30rem">
 			<div style="display: flex; flex-direction: row;">
+				<!-- buton de login -->
 				<form action="#" th:action="@{/loginPage}" method="get"
 					style="width: 35rem">
 					<input type="submit" th:value="Login" class="login-button"
 						style="padding: 1rem 3.5rem; border-radius: 2rem 0.5rem 0.5rem 0.5rem;">
 				</form>
+				<!-- buton de register -->
 				<form action="#" th:action="@{/registerPage}" method="get"
 					style="width: 15rem">
 					<input type="submit" th:value="Register" class="register-button"
@@ -25,21 +28,18 @@
 				</form>
 			</div>
 			<div>
-
-
-
+				<!-- mesajul de informare in cazul in care te ai inregistrat cu succes sau ceva nu a mers bine
+			la introducerea informatiilor pentru logare -->
 				<div class="infoMessage">
-					<p th:text="${succesRegistrationMessage}"></p>
+					<p th:text="${loginPageMessage}"></p>
 				</div>
-
-
-
+				<!--casetele de text pentru inputuri -->
 				<form action="#" th:action="@{/inputUser}" th:object="${userLogin}"
 					method="post">
 					<p>
-						ID: <input type="text" name="passkey" id="num"
-							oninput="return onlynum()" maxlength="13" th:field="*{userID}"
-							placeholder="ID" />
+						ID: <input type="text"
+							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+							maxlength="13" th:field="*{userID}" placeholder="ID" />
 					</p>
 					<p>
 						Password: <input type="password" th:field="*{passwordUser}"

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>DeshBoard-CheapBank</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link th:href="@{homePageFiles/deshboardPages.css}" rel="stylesheet">
+</head>
+<body>
+	<!-- ZONA DE BUTOANE PRINCIPALE DE PE PAGINA -->
+	<div class="buttonZone">
+		<div class="homeDeshButtton">
+			<form th:action="@{/deshboard}" method="get">
+				<input class="imageButton" type="image" alt="bankLogo"
+					src="images/bankLogo.png">
+			</form>
+		</div>
+		<div class="transferDeshButton">
+			<form th:action="@{/transfer}" method="get">
+				<input type="submit" value="Transfer">
+			</form>
+		</div>
+		<div class="profilDeshButton">
+			<form th:action="@{/profil}" method="get">
+				<input type="submit" value="Profil">
+			</form>
+		</div>
+		<div class="logoutDeshButton">
+			<form th:action="@{/logOut}" method="get">
+				<input type="submit" value="Logout">
+			</form>
+		</div>
+	</div>
+	<!-- ZONA DE CONTENT A DESHBORDULUI -->
+	<div style="display: flex; margin:1rem; justify-content: center; height: 85%">
+		<div class="infoMid">
+			<div class="interior_aspect_child">
+				<p>
+					Utilizator: <span th:text="${info_name}"></span>
+				</p>
+				<p>
+					Balance: <span th:text="${info_sold}"></span> $
+				</p>
+			</div>
+
+			<div class="interior_aspect_child" style="height: 71%;">
+				<form action="#" th:action="@{/transfer_to}" th:object="${transfer}"
+					method="post">
+					CNP:<input type="text"
+						oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+						maxlength="13" th:field="*{transfer_toID}" /> AMOUND:<input
+						type="text"
+						oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+						maxlength="13" th:field="*{amound_toID}" /> <input type="submit"
+						th:value="TRANSFER" /> <input type="reset" th:value="RESET" />
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>
