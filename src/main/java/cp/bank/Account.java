@@ -14,10 +14,8 @@ public class Account {
 	public String lastName;
 	public String firstName;
 	public String phoneNumber;
-
 	public String email;
 	private String password;
-
 	private Double sold = 0d;
 
 

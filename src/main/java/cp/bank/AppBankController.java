@@ -2,7 +2,7 @@ package cp.bank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Optional;
 
+@Service
 @Controller
 public class AppBankController {
 
@@ -19,15 +19,11 @@ public class AppBankController {
 
 	@Autowired
 	public AccountRepository accountRepo;
+	@Autowired
+	public IstoricRepository istoricRepo;
 
-	//creez mai intai instantele pentru clienti si conturile din banca si dupa le adaug in map uri
 	@GetMapping("")
 	public String home() {
-		return "loginPages/home";
-	}
-
-	@GetMapping("/home")
-	public String home1() {
 		return "loginPages/home";
 	}
 
@@ -154,7 +150,12 @@ public class AppBankController {
 	}
 
 	@GetMapping("/transfer")
-	public String desgTransfer(Model model) {
+	public String deshTransfer(Model model) {
+		if(persoanaLogata == null) {
+			model.addAttribute("loginPageMessage", "Please login!");
+			model.addAttribute("userLogin", new UserLogin());
+			return loginPage(model);
+		}
 		model.addAttribute("transfer", new TransferToAccout());
 		model.addAttribute("info_sold", accountRepo.findById(persoanaLogata).get().getSold());
 		model.addAttribute("info_name", accountRepo.findById(persoanaLogata).get().firstName + " " + accountRepo.findById(persoanaLogata).get().lastName);
@@ -170,30 +171,70 @@ public class AppBankController {
 	}
 
 	@GetMapping("/logOut")
-	public String desgLogout(Model model) {
+	public String deshLogout(Model model) {
 		persoanaLogata = null;
 
 		model.addAttribute("userLogin", new UserLogin());
 		return "loginPages/loginPage";
 	}
 
-	@PostMapping("/transfer_to")
-	public String transferTo(Model model, @ModelAttribute TransferToAccout newTransferToAccout) {
+	@PostMapping("/transfer_from_transfer_dashboard")
+	private String transfer_from_transfer_dashboard(Model model, @ModelAttribute TransferToAccout newTransferToAccout) {
 		Long transferto_ID;
 		Double amountTransfer;
+		//model pentru deshboard
 		model.addAttribute("transfer", new TransferToAccout());
 		//validare campuri de input
-		if(newTransferToAccout.transfer_toID==null || !accountRepo.existsById(newTransferToAccout.transfer_toID)) {
-			System.out.println("ID invalid");
-			model.addAttribute("warning_transfer", "Invalid ID");
-			return deshboard(model);
+
+		if(newTransferToAccout.transfer_toID==null) {
+			System.out.println("CNP invalid");
+			model.addAttribute("warning_transfer", "Invalid CNP");
+			return deshTransfer(model);
 		}
 		if(newTransferToAccout.amound_toID == null) {
 			System.out.println("Amount invalid");
 			model.addAttribute("warning_transfer", "Amount invalid");
+			return deshTransfer(model);
+		}
+		transferto_ID = newTransferToAccout.transfer_toID;
+		amountTransfer = newTransferToAccout.amound_toID;
+
+		if(accountRepo.findById(persoanaLogata).get().getSold() < amountTransfer) {
+			System.out.println("Suma de transferat este mai mare decat soldul contului.");
+			model.addAttribute("warning_transfer", "Not enough money");
+			return deshTransfer(model);
+		}	
+		if(!accountRepo.existsById(newTransferToAccout.transfer_toID)) {
+			System.out.println("CNP doesn't exist");
+			model.addAttribute("warning_transfer", "CNP doesn't exist");
+			return deshTransfer(model);
+		}
+		logicTransfer(transferto_ID, amountTransfer);
+		return deshTransfer(model);
+	}
+
+	@PostMapping("/transfer_from_deshboard")
+	private String transferTo(Model model, @ModelAttribute TransferToAccout newTransferToAccout) {
+		Long transferto_ID;
+		Double amountTransfer;
+		//model pentru deshboard
+		model.addAttribute("transfer", new TransferToAccout());		
+		//validare campuri de input
+		if(newTransferToAccout.transfer_toID==null) {
+			System.out.println("CNP invalid");
+			model.addAttribute("warning_transfer", "Invalid CNP");
 			return deshboard(model);
 		}
-
+		if(newTransferToAccout.amound_toID==null) {
+			System.out.println("Amount invalid");
+			model.addAttribute("warning_transfer", "Amount invalid");
+			return deshboard(model);
+		}
+		if(!accountRepo.existsById(newTransferToAccout.transfer_toID)) {
+			System.out.println("CNP doesn't exist");
+			model.addAttribute("warning_transfer", "CNP doesn't exist");
+			return deshboard(model);
+		}
 		transferto_ID = newTransferToAccout.transfer_toID;
 		amountTransfer = newTransferToAccout.amound_toID;
 
@@ -203,7 +244,15 @@ public class AppBankController {
 			return deshboard(model);
 		}
 		//realizare transfer
+		logicTransfer(transferto_ID, amountTransfer);
 
+
+		System.out.println("Transfer reusit.");
+		model.addAttribute("warning_transfer", "Successful transfer");
+		return deshboard(model);
+	}
+
+	private void logicTransfer(Long transferto_ID, Double amountTransfer) {
 		//adaugare suma in contul beneficiar
 		Account newAccount_beneficiar = new Account();
 		newAccount_beneficiar.setEmail(accountRepo.findById(transferto_ID).get().email);
@@ -225,13 +274,11 @@ public class AppBankController {
 		newAccount_expeditor.setPhoneNumber(accountRepo.findById(persoanaLogata).get().phoneNumber);
 		newAccount_expeditor.setSold((accountRepo.findById(persoanaLogata).get().getSold()) - amountTransfer);
 		accountRepo.save(newAccount_expeditor);
-
-
-		System.out.println("Transfer reusit.");
-		model.addAttribute("warning_transfer", "Successful transfer");
-		return deshboard(model);
+		
+		//salvarea informatiilor despre tranzactie in IstoricRepository
+		String tipTransaction = "";
+		String infoTransaction = "";
 	}
-
 
 
 }
