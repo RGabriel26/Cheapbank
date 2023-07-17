@@ -189,41 +189,6 @@ public class AppBankController {
 		return "loginPages/loginPage";
 	}
 
-	@PostMapping("/transfer_from_transfer_dashboard")
-	private String transfer_from_transfer_dashboard(Model model, @ModelAttribute TransferToAccout newTransferToAccout) {
-		Long transferto_ID;
-		Double amountTransfer;
-		//model pentru deshboard
-		model.addAttribute("transfer", new TransferToAccout());
-		//validare campuri de input
-
-		if(newTransferToAccout.transfer_toID==null) {
-			System.out.println("CNP invalid");
-			model.addAttribute("warning_transfer", "Invalid CNP");
-			return deshTransfer(model);
-		}
-		if(newTransferToAccout.amound_toID == null) {
-			System.out.println("Amount invalid");
-			model.addAttribute("warning_transfer", "Amount invalid");
-			return deshTransfer(model);
-		}
-		transferto_ID = newTransferToAccout.transfer_toID;
-		amountTransfer = newTransferToAccout.amound_toID;
-
-		if(accountRepo.findById(persoanaLogata).get().getSold() < amountTransfer) {
-			System.out.println("Suma de transferat este mai mare decat soldul contului.");
-			model.addAttribute("warning_transfer", "Not enough money");
-			return deshTransfer(model);
-		}	
-		if(!accountRepo.existsById(newTransferToAccout.transfer_toID)) {
-			System.out.println("CNP doesn't exist");
-			model.addAttribute("warning_transfer", "CNP doesn't exist");
-			return deshTransfer(model);
-		}
-		logicTransfer(transferto_ID, amountTransfer);
-		return deshTransfer(model);
-	}
-
 	@PostMapping("/transfer_from_deshboard")
 	private String transferTo(Model model, @ModelAttribute TransferToAccout newTransferToAccout) {
 		Long transferto_ID;
@@ -231,19 +196,23 @@ public class AppBankController {
 		//model pentru deshboard
 		model.addAttribute("transfer", new TransferToAccout());		
 		//validare campuri de input
-		if(newTransferToAccout.transfer_toID==null) {
+		if(newTransferToAccout.transfer_toID.equals(persoanaLogata)) {
+			System.out.println("Nu poti sa faci un tranfer catre tine!");
+			model.addAttribute("warning_transfer", "Cannot make a transfer to you!");
+			return deshboard(model);
+		}else if(newTransferToAccout.transfer_toID==null) {
 			System.out.println("CNP invalid");
-			model.addAttribute("warning_transfer", "Invalid CNP");
+			model.addAttribute("warning_transfer", "Invalid CNP!");
 			return deshboard(model);
 		}
 		if(newTransferToAccout.amound_toID==null) {
 			System.out.println("Amount invalid");
-			model.addAttribute("warning_transfer", "Amount invalid");
+			model.addAttribute("warning_transfer", "Amount invalid!");
 			return deshboard(model);
 		}
 		if(!accountRepo.existsById(newTransferToAccout.transfer_toID)) {
 			System.out.println("CNP doesn't exist");
-			model.addAttribute("warning_transfer", "CNP doesn't exist");
+			model.addAttribute("warning_transfer", "CNP is not associated with a valid account!");
 			return deshboard(model);
 		}
 		transferto_ID = newTransferToAccout.transfer_toID;
@@ -251,7 +220,7 @@ public class AppBankController {
 
 		if(accountRepo.findById(persoanaLogata).get().getSold() < amountTransfer) {
 			System.out.println("Suma de transferat este mai mare decat soldul contului.");
-			model.addAttribute("warning_transfer", "Not enough money");
+			model.addAttribute("warning_transfer", "Not enough money!");
 			return deshboard(model);
 		}
 		//realizare transfer
@@ -259,7 +228,7 @@ public class AppBankController {
 
 
 		System.out.println("Transfer reusit.");
-		model.addAttribute("warning_transfer", "Successful transfer");
+		model.addAttribute("warning_transfer", "Successful transfer!");
 		return deshboard(model);
 	}
 
@@ -290,64 +259,57 @@ public class AppBankController {
 		newAccount_expeditor.setSold((accountRepo.findById(persoanaLogata).get().getSold()) - amountTransfer);
 		accountRepo.save(newAccount_expeditor);
 
-		//salvarea informatiilor despre tranzactie in IstoricRepository
+		//salvarea informatiilor despre tranzactie in istoricul contului care a efectuat transferul
 		String infoTransaction = typeTransaction + ": [" + persoanaLogata +"]=> "
 				+ newAccount_expeditor.firstName + " " + newAccount_expeditor.lastName
 				+" transferred " + amountTransfer +"$ to: " +"[" + transferto_ID +"]=> " + newAccount_beneficiar.firstName 
 				+ " " + newAccount_beneficiar.lastName + "  ";
 		if(istoricRepo.existsById(persoanaLogata)) {
 			newLTransferRepo = new LinkedList<>(istoricRepo.findById(persoanaLogata).get().getTransactions());
-
 		}else {
 			newLTransferRepo = new LinkedList<>();
 		}
 		newLTransferRepo.add(infoTransaction);
 		istoricRepo.save(new IstoricTransfers(persoanaLogata, newLTransferRepo));
 
-		//salvare persoana in istoricAccountsRepository - conturile cu care s-a interactionat in transferuri
-		String saveAccount = "[" + transferto_ID + "] => " + newAccount_beneficiar.firstName 
-				+ " " + newAccount_beneficiar.lastName + "  " ;
-
-		if(istoricAccoutsRepo.existsById(persoanaLogata)) {
-			newAccountRepo = new LinkedList<>(istoricAccoutsRepo.findById(persoanaLogata).get().getIstoricAccounts());
-			newAccountRepo.add(saveAccount);
-			istoricAccoutsRepo.save(new IstoricAccounts(persoanaLogata, newAccountRepo));
+		//salvare informatiilor despre tranzactie in istoricul contului caruia i se efectueaza transferul
+		String infoReceiveTransaction = "Receive money from" + ": [" + persoanaLogata +"]=> "
+				+ newAccount_expeditor.firstName + " " + newAccount_expeditor.lastName
+				+" " + amountTransfer +"$";
+		if(istoricRepo.existsById(transferto_ID)) {
+			newLTransferRepo = new LinkedList<>(istoricRepo.findById(transferto_ID).get().getTransactions());
 		}else {
-			for(IstoricAccounts acc: istoricAccoutsRepo.findAll()) {
-				if(!acc.getIstoricAccounts().contains(Long.toString(transferto_ID))) {
-					newAccountRepo = new LinkedList<>();
-					newAccountRepo.add(saveAccount);
-					istoricAccoutsRepo.save(new IstoricAccounts(persoanaLogata, newAccountRepo));
-				}
-				
-			}
-			
+			newLTransferRepo = new LinkedList<>();
 		}
+		newLTransferRepo.add(infoReceiveTransaction);
+		istoricRepo.save(new IstoricTransfers(transferto_ID, newLTransferRepo));
 
-//		for(IstoricAccounts acc: istoricAccoutsRepo.findAll()) {
-//			if(acc.getIstoricAccounts().contains(Long.toString(transferto_ID))) {
-//				if(istoricAccoutsRepo.existsById(persoanaLogata)) {
-//					newAccountRepo = new LinkedList<>(istoricAccoutsRepo.findById(persoanaLogata).get().getIstoricAccounts());
-//				}else {
-//					newAccountRepo = new LinkedList<>();
-//				}
-//				newAccountRepo.add(saveAccount);
-//				istoricAccoutsRepo.save(new IstoricAccounts(persoanaLogata, newAccountRepo));
-//			}
-//		}
 
-		//		if(!saveAccount.contains(Long.toString(transferto_ID))) {
-		//			if(istoricAccoutsRepo.existsById(persoanaLogata)) {
-		//				newAccountRepo = new LinkedList<>(istoricAccoutsRepo.findById(persoanaLogata).get().getIstoricAccounts());
-		//			}else {
-		//				newAccountRepo = new LinkedList<>();
-		//			}
-		//			newAccountRepo.add(saveAccount);
-		//			istoricAccoutsRepo.save(new IstoricAccounts(persoanaLogata, newAccountRepo));
-		//		}
-		//	}
+		//salvare persoana in istoricAccountsRepository - conturile cu care s-a interactionat in transferuri
+		String saveAccount_for_istoricAccountRepo = "[" + transferto_ID + "] => " + newAccount_beneficiar.firstName 
+				+ " " + newAccount_beneficiar.lastName + "  " ;
+		if(istoricAccoutsRepo.existsById(persoanaLogata)) {
+			//in cazul in care persoana are deja un istoric de interactiuni cu alti utilizatori
+			//verificam daca persoana nu se afla dela in list ul cu persoane 
+			//transferto_ID - persoana nu care se face transferul
+			for(String acc:istoricAccoutsRepo.findById(persoanaLogata).get().istoricAccounts) {
+				if(acc.contains(Long.toString(transferto_ID))) {
+					System.out.println("Persoana este in baza de date cu persoane cu care s a interactionat.");
+				}else {
+					System.out.println("Persoana nu este in lista cu persoane cu care s-a interactionat.");
+					newAccountRepo = new LinkedList<>(istoricAccoutsRepo.findById(persoanaLogata).get().istoricAccounts);
+					newAccountRepo.add(saveAccount_for_istoricAccountRepo);
+					istoricAccoutsRepo.save(new IstoricAccounts(persoanaLogata, newAccountRepo));
+					break;
+				}
+			}
+		}else{
+			//in cazul in care persoana nu are un istoric de interactiuni intre utilizatori
+			//pregatire string de adaugat in db
+			newAccountRepo = new LinkedList<>();
+			newAccountRepo.add(saveAccount_for_istoricAccountRepo);
+			istoricAccoutsRepo.save(new IstoricAccounts(persoanaLogata, newAccountRepo));
+		}
 	}
-
-
 }
 
