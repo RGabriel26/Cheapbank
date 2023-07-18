@@ -31,8 +31,12 @@ body {
 	flex-direction: raw;
 }
 
-.profilDeshButton {
+.transferDeshButton {
 	margin-left: auto;
+	margin-right: 1rem;
+}
+
+.profilDeshButton {
 	margin-right: 1rem;
 }
 

@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>ATM-CheapBank</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link th:href="@{atm/atm.css}" rel="stylesheet">
+<link th:href="@{atm/atmlogin.css}" rel="stylesheet">
+</head>
+<body>
+	<!-- ZONA DE BUTOANE PRINCIPALE DE PE PAGINA -->
+	<form class="bankLogo" th:action="@{/atm}" method="get">
+		<input style="width: 20%" type="image" alt="bankLogo"
+			src="images/bankLogo.png">
+	</form>
+	<!-- ZONA DE CONTENT A DESHBORDULUI -->
+	<div
+		style="display: flex; margin: 1rem; justify-content: center; height: 79%">
+		<div class="infoMid">
+			<div class="interior_aspect_child">
+				<p>
+					Utilizator: <span th:text="${info_name}"></span>
+				</p>
+				<p>
+					Balance: <span th:text="${info_sold}"></span> $
+				</p>
+			</div>
+
+			<div>
+				<p class="interior_aspect_child"
+					style="height: auto; display: flex; justify-content: center;"
+					th:text="${atmPageMessage}"></p>
+			</div>
+
+			<div class="interior_aspect_child" style="height: 62%;">
+				<form action="#" th:action="@{/deposit}" th:object="${transfer}"
+					method="post">
+					AMOUND:<input type="text"
+						oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+						maxlength="13" th:field="*{amound_toID}" /> 
+						<input type="submit" th:value="DEPOSIT" /> 
+						<input type="reset" th:value="RESET" />
+				</form>
+				<div class="logoutDeshButton">
+					<form th:action="@{/logOutATM}" method="get">
+						<input type="submit" value="Logout">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

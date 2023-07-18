@@ -3,6 +3,7 @@ package cp.bank;
 public class TransferToAccout {
 	public Long transfer_toID;
 	public Double amound_toID;
+	public String origin;
 	
 	
 	public TransferToAccout() {
@@ -25,6 +26,15 @@ public class TransferToAccout {
 		this.amound_toID = amound_toID;
 	}
 
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
+	
+	
 
 	
 	
