@@ -215,12 +215,20 @@ public class AppBankController {
 
 	@PostMapping("/deposit")
 	public String deposit(Model model, @ModelAttribute TransferToAccout newTransferToAccout) {
-		logicTransfer(persoanaLogata, newTransferToAccout.amound_toID, "Deposit");
-		model.addAttribute("atmPageMessage", "Successfully transferred!");
-		model.addAttribute("transfer", new TransferToAccout());
-		model.addAttribute("info_sold", accountRepo.findById(persoanaLogata).get().getSold());
-		model.addAttribute("info_name", accountRepo.findById(persoanaLogata).get().firstName + " " + accountRepo.findById(persoanaLogata).get().lastName);
-		return "atm/atm.html";
+		if(newTransferToAccout.amound_toID == null) {
+			model.addAttribute("atmPageMessage", "Invalid amount!");
+			model.addAttribute("transfer", new TransferToAccout());
+			model.addAttribute("transfer", new TransferToAccout());
+			model.addAttribute("info_name", accountRepo.findById(persoanaLogata).get().firstName + " " + accountRepo.findById(persoanaLogata).get().lastName);
+			return "atm/atm.html";
+		}else {
+			logicTransfer(persoanaLogata, newTransferToAccout.amound_toID, "Deposit");
+			model.addAttribute("atmPageMessage", "Successfully transferred!");
+			model.addAttribute("transfer", new TransferToAccout());
+			model.addAttribute("transfer", new TransferToAccout());
+			model.addAttribute("info_name", accountRepo.findById(persoanaLogata).get().firstName + " " + accountRepo.findById(persoanaLogata).get().lastName);
+			return "atm/atm.html";
+		}
 	}
 
 	@GetMapping("/profil")

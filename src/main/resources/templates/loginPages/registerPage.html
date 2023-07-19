@@ -11,7 +11,7 @@
 		<input type="image" alt="bankLogo" src="images/bankLogo.png">
 	</form>
 	<div class="container">
-		<div class="loginZone" style="width: 35%; height: 20%">
+		<div class="loginZone" style="width: 35%; height: auto">
 			<div style="display: flex; flex-direction: row;">
 				<form action="#" th:action="@{/loginPage}" method="get"
 					style="width: 15rem">
@@ -68,7 +68,7 @@
 								th:field="*{phoneNumber}" />
 
 						</div>
-						<div class="buttons" style="margin-top: 2rem ; width: auto">
+						<div class="buttons" style="margin-top: 2rem; margin-bottom: 2.5rem; width: auto">
 							<input type="submit" id="registerButton" th:value="REGISTER" />
 						</div>
 					</form>

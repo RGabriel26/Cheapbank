@@ -1,5 +1,5 @@
 html {
-	font-family: Arial, Helvetica, sans-serif;
+	 font-family: "Times New Roman";
 }
 
 body {
@@ -142,7 +142,7 @@ body {
 	background-color: #22E3C7;
     border-radius: 1rem;
     box-shadow: inset 2px 2px 10px #209379;
-    border-color: #246f4b;
+    border-color: #209379;
     text-align: center;
     font-size: 150%;
     height: 3rem;

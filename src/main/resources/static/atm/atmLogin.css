@@ -1,4 +1,8 @@
 /*STYLE PAGE*/
+html{
+	 font-family: "Times New Roman";
+}
+
 body {
 	background-color: #22e3c7;
 }
@@ -96,16 +100,60 @@ body {
 	width: 40%;
 	height: auto;
 }
-
 .infoMessage p{
 	display: flex;
 	justify-content: center;
 	align-content: center;
 	color: red;
-	
 	font-weight: bold;
 	font-size: 1.5rem;
-	
 }
 
 /*STYLE CONTENT*/
+
+.content form {
+	padding-left: 5rem;
+	padding-right: 5rem;
+}
+
+.content div {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 1rem;
+}
+
+.content form p {
+	margin: 0;
+	font-size: 1.5rem;
+}
+
+.content form div input {
+	background-color: #1AC8AD;
+	box-shadow: inset 3px -3px 0px 1px #209379;
+	border-color: transparent;
+	border-radius: 10px;
+	text-indent: 1rem;
+	text-align: left;
+	font-size: 150%;
+	padding-left: 1rem;
+}
+
+
+.content form .buttons input{
+	background-color: #22e3c7;
+    border-radius: 1rem;
+    box-shadow: inset 2px 2px 10px #26ae8f;
+    border-color: #26ae8f;
+    text-align: center;
+    font-size: 150%;
+    height: 3rem;
+}
+
+.content form .buttons input:hover {
+	background-color: #26ae8f;
+}
+
+.content form .buttons input:active {
+	background-color: #ff4242;
+	transform: translateY(4px);
+}

@@ -4,7 +4,6 @@
 <title>ATM-CheapBank</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link th:href="@{atm/atm.css}" rel="stylesheet">
-<link th:href="@{atm/atmlogin.css}" rel="stylesheet">
 </head>
 <body>
 	<!-- ZONA DE BUTOANE PRINCIPALE DE PE PAGINA -->
@@ -13,16 +12,17 @@
 			src="images/bankLogo.png">
 	</form>
 	<!-- ZONA DE CONTENT A DESHBORDULUI -->
-	<div
-		style="display: flex; margin: 1rem; justify-content: center; height: 79%">
-		<div class="infoMid">
-			<div class="interior_aspect_child">
-				<p>
-					Utilizator: <span th:text="${info_name}"></span>
-				</p>
-				<p>
-					Balance: <span th:text="${info_sold}"></span> $
-				</p>
+	<div style="display: flex; margin: 1rem; justify-content: center; height: 79%">
+		<div class="content">
+			<div class="interior_aspect_child" style=" display: flex; justify-content: center; align-content: center;">
+				<div class="info_account" >
+					<p>
+						Utilizator: <span th:text="${info_name}"></span>
+					</p>
+					<p style="margin-top: 1rem">
+						Balance: <span th:text="${info_sold}"></span> <span>$</span>
+					</p>
+				</div>
 			</div>
 
 			<div>
@@ -36,9 +36,8 @@
 					method="post">
 					AMOUND:<input type="text"
 						oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-						maxlength="13" th:field="*{amound_toID}" /> 
-						<input type="submit" th:value="DEPOSIT" /> 
-						<input type="reset" th:value="RESET" />
+						maxlength="13" th:field="*{amound_toID}" /> <input type="submit"
+						th:value="DEPOSIT" /> <input type="reset" th:value="RESET" />
 				</form>
 				<div class="logoutDeshButton">
 					<form th:action="@{/logOutATM}" method="get">
