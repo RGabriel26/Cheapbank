@@ -252,13 +252,13 @@ public class AppBankController {
 		//model pentru deshboard
 		model.addAttribute("transfer", new TransferToAccout());		
 		//validare campuri de input
-		if(newTransferToAccout.transfer_toID.equals(persoanaLogata)) {
-			System.out.println("Nu poti sa faci un tranfer catre tine!");
-			model.addAttribute("warning_transfer", "Cannot make a transfer to you!");
-			return deshboard(model);
-		}else if(newTransferToAccout.transfer_toID==null) {
+		if(newTransferToAccout.transfer_toID==null) {
 			System.out.println("CNP invalid");
 			model.addAttribute("warning_transfer", "Invalid CNP!");
+			return deshboard(model);
+		}else if(newTransferToAccout.transfer_toID.equals(persoanaLogata)) {
+			System.out.println("Nu poti sa faci un tranfer catre tine!");
+			model.addAttribute("warning_transfer", "Cannot make a transfer to you!");
 			return deshboard(model);
 		}
 		if(newTransferToAccout.amound_toID==null) {
@@ -339,7 +339,7 @@ public class AppBankController {
 			accountRepo.save(newAccount_expeditor);
 
 			//salvarea informatiilor despre tranzactie in istoricul contului care a efectuat transferul
-			String infoTransaction = "Transferred " + amountTransfer + "$ to: [" + transferto_ID +"] " + newAccount_beneficiar.firstName 
+			String infoTransaction = "Transferred " + amountTransfer + "$ to: " + newAccount_beneficiar.firstName 
 					+ " " + newAccount_beneficiar.lastName + "   ";
 			if(istoricRepo.existsById(persoanaLogata)) {
 				newTransferRepo = new LinkedList<>(istoricRepo.findById(persoanaLogata).get().getTransactions());
@@ -350,7 +350,7 @@ public class AppBankController {
 			istoricRepo.save(new IstoricTransfers(persoanaLogata, newTransferRepo));
 
 			//salvare informatiilor despre tranzactie in istoricul contului caruia i se efectueaza transferul
-			String infoReceiveTransaction = "Receive " +amountTransfer +"$ from: [" + persoanaLogata +"] "
+			String infoReceiveTransaction = "Receive " +amountTransfer +"$ from: "
 					+ newAccount_expeditor.firstName + " " + newAccount_expeditor.lastName;
 			if(istoricRepo.existsById(transferto_ID)) {
 				newTransferRepo = new LinkedList<>(istoricRepo.findById(transferto_ID).get().getTransactions());

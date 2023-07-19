@@ -20,18 +20,17 @@
 				<div class="infoMessage">
 					<p th:text="${loginPageMessage}"></p>
 				</div>
-				
+
 				<!--casetele de text pentru inputuri -->
-				<form action="#"
-					th:action="@{/inputAtm}" th:object="${userLogin}" method="post">
+				<form action="#" th:action="@{/inputAtm}" th:object="${userLogin}"
+					method="post">
 					<p>
 						ID: <input type="text"
 							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-							maxlength="13" th:field="*{userID}" placeholder="ID" />
+							maxlength="13" th:field="*{userID}" />
 					</p>
 					<p>
-						Password: <input type="password" th:field="*{passwordUser}"
-							placeholder="Password" />
+						Password: <input type="password" th:field="*{passwordUser}" />
 					</p>
 					<input type="submit" id="loginButton" th:value="LOGIN" />
 				</form>

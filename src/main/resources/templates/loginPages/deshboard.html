@@ -14,79 +14,88 @@
 					src="images/bankLogo.png">
 			</form>
 		</div>
-		<div
-			style="margin-left: auto; margin-right: 1rem; align-items: baseline;">
+		<div class="profile" style="margin-left: auto; margin-right: 1rem;">
 			<form th:action="@{/profil}" method="get">
-				<input type="submit" value="&#128100;Profil">
+				<input type="image" alt="profileImage" src="images/profile.png">
 			</form>
 		</div>
-		<div>
+		<div class="logout">
 			<form th:action="@{/logOut}" method="get">
-				<input type="submit" value="Logout">
+				<input type="image" alt="logoutImage" src="images/logout.png">
 			</form>
 		</div>
+
 	</div>
 
 	<!-- ZONA DE CONTENT A DESHBORDULUI -->
 	<div style="display: flex; margin: 1rem; height: 85%">
 		<div class="infoLeft">
 			<div class="interior_aspect_child" id="userName">
-				<p class="p_userName" >Utilizator:</p>
+				<p class="p_userName">Utilizator:</p>
 				<span class="span_userName" th:text="${info_name}"></span>
 
 			</div>
 			<div class="interior_aspect_child"
-				style="width: auto; height: 70%; overflow-x: scroll !important; overflow-y: scroll; white-space: nowrap;">
-				<p style="text-align: center;">Transaction history:</p>
+				style="width: auto; height: 73%; overflow-x: scroll !important; overflow-y: scroll; white-space: nowrap;">
+				<p style="text-align: center; font-size: 150%; margin: 1rem;">Transaction
+					history:</p>
 				<!-- LISTAREA TRANZACTIILOR -->
-				<div>
+				<div class="istoric">
 					<p th:each="list : ${listTransaction}">
-						&#128184;<span th:text="${list}"></span>
+						<span style="padding-left: 0.5rem; padding-right: 0.5rem;">&#128184;</span>
+						<span th:text="${list}"></span>
 					</p>
 				</div>
 			</div>
 		</div>
-		<!-- PROBLEMA: INALTIMEA DIVURILE NU SUNT LIPITE DE DIVUL DIN CARE FAC PARTE -->
+
 		<div class="infoMid">
 			<div class="interior_aspect_child">
-				Balance: <span th:text="${info_sold}"></span> $
+				<div class="balance">
+					<span style=" margin-right: 10%">Balance:</span>
+					<span th:text="${info_sold}"></span> 
+					<span style=" margin-left: 1rem">$</span>
+				</div>
 			</div>
-			<div>
-				<p class="interior_aspect_child"
-					style="height: auto; display: flex; justify-content: center;"
-					th:text="${warning_transfer}"></p>
-			</div>
+			
+			<p class="interior_aspect_child"
+				style="height: auto; display: flex; justify-content: center; font-size: 20px"
+				th:text="${warning_transfer}"></p>
+				
 			<p style="text-align: center;">Transfer</p>
-			<div class="interior_aspect_child" style="height: 58%;">
+			<div class="interior_aspect_child"
+				style="height: 55%; width: auto; display: flex; justify-content: center; align-items: center;">
 				<form action="#" th:action="@{/transfer_from_deshboard}"
 					th:object="${transfer}" method="post">
 					<div>
-						CNP: <input type="text"
+						<p>CNP:</p>
+						<input type="text"
 							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
 							maxlength="13" th:field="*{transfer_toID}" />
-					</div>
-					<div>
-						AMOUND: <input type="text"
+						<p>AMOUND:</p>
+						<input type="text"
 							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
 							maxlength="13" th:field="*{amound_toID}" />
 					</div>
-					<div>
-						<input type="submit" th:value="TRANSFER" />
-					</div>
-					<div>
-						<input type="reset" th:value="RESET" />
+					<div class="buttons">
+						<input type="submit" id="button" th:value="TRANSFER" /> <input
+							style="margin-top: 2rem" type="reset" id="button"
+							th:value="RESET" />
+
 					</div>
 				</form>
 			</div>
 		</div>
 		<div class="infoRight">
-			<p class="interior_aspect_child" style="height: 10%">Last
-				transfer:</p>
+			<p class="interior_aspect_child" id="titleLeft" style="height: 10%;">
+				<span class="p_userName"> Friends:</span>
+			</p>
 			<div class="interior_aspect_child"
 				style="width: auto; height: 80%; overflow-x: scroll !important; overflow-y: scroll; white-space: nowrap;">
-				<div>
+				<div class="istoric">
 					<p th:each="list : ${listAccounts}">
-						&#128100;<span th:text="${list}"></span>
+						<span style="padding-left: 0.5rem; padding-right: 0.5rem;">&#129309;</span><span
+							th:text="${list}"></span>
 					</p>
 				</div>
 			</div>

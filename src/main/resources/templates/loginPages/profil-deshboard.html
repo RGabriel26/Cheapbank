@@ -14,16 +14,17 @@
 					src="images/bankLogo.png">
 			</form>
 		</div>
-		<div style="margin-left: auto; margin-right: 1rem; align-items:  baseline;">
+		<div class="profile" style="margin-left: auto; margin-right: 1rem;">
 			<form th:action="@{/profil}" method="get">
-				<input type="submit" value="Profil">
+				<input type="image" alt="profileImage" src="images/profile.png">
 			</form>
 		</div>
-		<div>
+		<div class="logout">
 			<form th:action="@{/logOut}" method="get">
-				<input type="submit" value="Logout">
+				<input type="image" alt="logoutImage" src="images/logout.png">
 			</form>
 		</div>
+
 	</div>
 </body>
 </html>

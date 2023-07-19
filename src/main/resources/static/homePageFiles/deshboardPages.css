@@ -6,6 +6,7 @@
 html {
 	height: 100%;
 	overflow: hidden;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
@@ -27,12 +28,14 @@ body {
 	justify-content: center;
 	align-items: flex-end;
 	flex-direction: raw;
+	border-radius:0.5rem;;
+	box-shadow: inset 3px -3px 0px 1px #209379;
+    border-color: transparent;
 	
 }
 
 .buttonZone form input {
-	background-color: #22e3c7;
-	border-radius: 1rem;
+	
 	font-size: 150%;
 	padding-left: 1rem;
 	padding-right: 1rem;
@@ -40,9 +43,12 @@ body {
 	border-color: transparent;
 }
 
+.buttonZone .homeDeshButtton form input{
+	box-shadow: none;
+}
+
 .buttonZone div form input[type=submit]:hover {
 	background-color: #1edd96;
-	color: white;
 }
 
 .buttonZone div form input[type=submit]:active {
@@ -55,7 +61,21 @@ body {
 	height: 4rem;
 }
 
+.buttonZone .logout form input{
+	height: 4rem;;
+	width: 4rem;
+	border-radius: 1rem 1rem 0rem 1rem;
+}
+
+.buttonZone .profile form input{
+	border-radius: 1rem;
+	height: 4rem;
+	width: 4rem;
+	
+}
+
 /*ZONA DE CONTINUT A PAGINII*/
+
 .infoLeft {
 	background-color: #1bcfb5;
 	height: 100%;
@@ -65,21 +85,31 @@ body {
 	border-radius: 1rem 1rem 1rem 1rem;
 }
 
-.infoLeft .p_userName{
+.infoLeft .p_userName {
 	font-size: 130%;
 }
 
-.infoLeft .span_userName{
+.infoLeft .span_userName {
 	font-size: 170%;
 }
 
-.infoLeft #userName{
+.infoLeft #userName {
 	height: auto;
-	padding-top:2rem;
-	padding-bottom:2rem;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
 	padding-right: 3rem;
 	padding-left: 3rem;
 }
+
+.infoLeft .interior_aspect_child .istoric p span {
+	border-radius: 0.3rem;
+	box-shadow: 1px 2px 3px 2px #209379;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	font-size: 110%
+}
+
+/*****************/
 
 .infoMid {
 	width: 50%;
@@ -90,6 +120,73 @@ body {
 	padding: 0.5rem;
 }
 
+.infoMid .interior_aspect_child .balance {
+	font-size: 45px;
+	height: 100%;
+	width: 100%;
+	padding-left: 3rem;
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+}
+
+.infoMid p {
+	font-size: 20px;
+}
+
+.infoMid .interior_aspect_child form  input {
+	background-color: #18BEA6;
+	border-radius: 10px;
+	text-indent : 1rem;
+	font-size: 150%;
+	box-shadow: inset 3px -3px 0px 1px #209379;
+	border-color: transparent;
+	text-indent: 1rem;
+}
+
+.infoMid form .buttons {
+	margin-top: 2rem;
+	width: 100%;
+}
+
+.infoMid form .buttons #button{
+	background-color: #22E3C7;
+	border-radius:1rem;
+	box-shadow: inset 2px 2px 10px #209379; 
+	border-color: #246f4b;
+	text-align:center;
+	font-size: 150%;
+	padding-left: 1rem;
+}
+
+.infoMid form .buttons #button[type=submit]:hover {
+	background-color: #26ae8f;
+}
+
+.infoMid form .buttons #button[type=reset]:hover {
+	background-color: #26ae8f;
+}
+
+.infoMid form .buttons #button[type=submit]:active {
+	background-color: #1bc284;
+	transform: translateY(4px);
+}
+
+.infoMid form .buttons #button[type=reset]:active {
+	background-color: #ff4242;
+	transform: translateY(4px);
+}
+
+.infoMid form {
+	width: 70%;
+}
+
+.infoMid form div input {
+	width: 100%;
+}
+
+/*****************/
+
 .infoRight {
 	height: 100%;
 	width: 25%;
@@ -97,6 +194,25 @@ body {
 	margin-left: 0.5rem;
 	margin-right: 0.5rem;
 	border-radius: 1rem;
+}
+
+.infoRight .p_userName {
+	font-size: 150%;
+}
+
+.infoRight .interior_aspect_child .istoric p span {
+	border-radius: 0.3rem;
+	box-shadow: 1px 2px 3px 2px #209379;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	font-size: 110%
+}
+
+.infoRight #titleLeft {
+	display: flex;
+	align-items: center; padding-right : 3rem;
+	padding-left: 3rem;
+	padding-right: 3rem;
 }
 
 .interior_aspect_child {
@@ -108,7 +224,8 @@ body {
 }
 
 ::-webkit-scrollbar {
-	width: 12px;
+	width: 8px;
+	height: 8px;
 }
 
 ::-webkit-scrollbar-track {

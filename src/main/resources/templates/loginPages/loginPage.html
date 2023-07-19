@@ -12,7 +12,7 @@
 		<input type="image" alt="bankLogo" src="images/bankLogo.png">
 	</form>
 	<div class="container">
-		<div class="loginZone" style="width: 35%; height: 30%">
+		<div class="loginZone" style="width: 35%; height: 29rem">
 			<div style="display: flex; flex-direction: row;">
 				<!-- buton de login -->
 				<form action="#" th:action="@{/loginPage}" method="get"
@@ -27,32 +27,31 @@
 						style="border-radius: 0.5rem 2rem 0.5rem 0.5rem">
 				</form>
 			</div>
-			<div>
-				<!-- mesajul de informare in cazul in care te ai inregistrat cu succes sau ceva nu a mers bine
+			<!-- mesajul de informare in cazul in care te ai inregistrat cu succes sau ceva nu a mers bine
 			la introducerea informatiilor pentru logare -->
-				<div class="infoMessage">
-					<p th:text="${loginPageMessage}"></p>
-				</div>
-				<!--casetele de text pentru inputuri -->
-				<div class="content">
-					<form action="#" th:action="@{/inputUser}" th:object="${userLogin}"
-						method="post">
-						<div>
-							<p>ID:</p>
-							<input type="text"
-								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-								maxlength="13" th:field="*{userID}" placeholder="ID" />
-						</div>
-						<div>
-							<p>Password:</p>
-							<input type="password" th:field="*{passwordUser}"
-								placeholder="Password" />
-						</div>
-						<div style=" margin-top: 3rem; height:5rem; width: 100%">
-							<input type="submit" id="loginButton" th:value="LOGIN" />
-						</div>
-					</form>
-				</div>
+			<div class="infoMessage">
+				<p th:text="${loginPageMessage}"></p>
+			</div>
+			<!--casetele de text pentru inputuri -->
+			<div class="content">
+				<form action="#" th:action="@{/inputUser}" th:object="${userLogin}"
+					method="post">
+					<div>
+						<p>ID:</p>
+						<input type="text"
+							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+							maxlength="13" th:field="*{userID}" />
+					</div>
+					<div>
+						<p>Password:</p>
+						<input type="password" th:field="*{passwordUser}" />
+					</div>
+
+					<div class="buttons"
+						style="margin-top: 3rem; height: 5rem; width: 100%">
+						<input type="submit" id="loginButton" th:value="LOGIN" />
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
