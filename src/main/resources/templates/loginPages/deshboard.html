@@ -14,12 +14,13 @@
 					src="images/bankLogo.png">
 			</form>
 		</div>
-		<div class="profilDeshButton">
+		<div
+			style="margin-left: auto; margin-right: 1rem; align-items: baseline;">
 			<form th:action="@{/profil}" method="get">
-				<input type="submit" value="Profil">
+				<input type="submit" value="&#128100;Profil">
 			</form>
 		</div>
-		<div class="logoutDeshButton">
+		<div>
 			<form th:action="@{/logOut}" method="get">
 				<input type="submit" value="Logout">
 			</form>
@@ -29,10 +30,10 @@
 	<!-- ZONA DE CONTENT A DESHBORDULUI -->
 	<div style="display: flex; margin: 1rem; height: 85%">
 		<div class="infoLeft">
-			<div class="interior_aspect_child">
-				<p>
-					Utilizator: <span th:text="${info_name}"></span>
-				</p>
+			<div class="interior_aspect_child" id="userName">
+				<p class="p_userName" >Utilizator:</p>
+				<span class="span_userName" th:text="${info_name}"></span>
+
 			</div>
 			<div class="interior_aspect_child"
 				style="width: auto; height: 70%; overflow-x: scroll !important; overflow-y: scroll; white-space: nowrap;">
@@ -81,7 +82,8 @@
 		<div class="infoRight">
 			<p class="interior_aspect_child" style="height: 10%">Last
 				transfer:</p>
-			<div class="interior_aspect_child" style="width: auto; height: 80%; overflow-x: scroll !important; overflow-y: scroll; white-space: nowrap;">
+			<div class="interior_aspect_child"
+				style="width: auto; height: 80%; overflow-x: scroll !important; overflow-y: scroll; white-space: nowrap;">
 				<div>
 					<p th:each="list : ${listAccounts}">
 						&#128100;<span th:text="${list}"></span>

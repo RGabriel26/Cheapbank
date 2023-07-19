@@ -96,13 +96,76 @@ body {
 	height: auto;
 }
 
-.infoMessage p{
+.infoMessage p {
 	display: flex;
 	justify-content: center;
 	align-content: center;
 	color: red;
-	
 	font-weight: bold;
 	font-size: 1.5rem;
+}
+
+/*STYLE CONTENT*/
+.content input {
+	border-radius: 5rem;
+	height: 2rem;
+}
+
+.content form{
+	padding-left: 5rem;
+	padding-right: 5rem;
 	
 }
+
+.content div {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 1rem;
+}
+
+.content form p {
+	margin: 0;
+	font-size: 1.5rem ;
+
+}
+.content form div input{
+	background-color: #c0f8ef;
+	box-shadow: inset 1px 1px 5px #209379; 
+	border-color: #ffffff;
+	text-align:left;
+	font-size: 150%;
+	padding-left: 1rem;
+}
+
+.content form div input[type=submit]:hover {
+	background-color: #1edd96;
+	color: white;
+}
+
+.content form div input[type=submit]:active {
+	background-color: #1bc284;
+	transform: translateY(4px);
+}
+
+.content form div input[type=submit]{
+	text-align: center;
+	height: 2.3rem;
+}
+
+/*STYLE SCROLL BAR*/
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #22e3c7; 
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+

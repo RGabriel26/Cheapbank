@@ -1,10 +1,9 @@
 * {
 	margin: 0;
 	padding: 0;
-
 }
 
-html{
+html {
 	height: 100%;
 	overflow: hidden;
 }
@@ -17,7 +16,6 @@ body {
 }
 
 /*ZONA DE BUTOANE DE NAVIGARE*/
-
 .imageButton {
 	width: auto;
 	height: 4rem;
@@ -27,21 +25,37 @@ body {
 	height: auto;
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	align-items: flex-end;
 	flex-direction: raw;
+	
 }
 
-.profilDeshButton {
-	margin-left: auto;
-	margin-right: 1rem;
+.buttonZone form input {
+	background-color: #22e3c7;
+	border-radius: 1rem;
+	font-size: 150%;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	box-shadow: inset 1px 1px 5px #209379;
+	border-color: transparent;
 }
 
-.logoutDeshButton {
-	position: relative;
+.buttonZone div form input[type=submit]:hover {
+	background-color: #1edd96;
+	color: white;
+}
+
+.buttonZone div form input[type=submit]:active {
+	background-color: #1bc284;
+	transform: translateY(4px);
+}
+
+.buttonZone div form input[type=submit] {
+	text-align: center;
+	height: 4rem;
 }
 
 /*ZONA DE CONTINUT A PAGINII*/
-
 .infoLeft {
 	background-color: #1bcfb5;
 	height: 100%;
@@ -49,6 +63,22 @@ body {
 	margin-left: 0.5rem;
 	margin-right: 0.5rem;
 	border-radius: 1rem 1rem 1rem 1rem;
+}
+
+.infoLeft .p_userName{
+	font-size: 130%;
+}
+
+.infoLeft .span_userName{
+	font-size: 170%;
+}
+
+.infoLeft #userName{
+	height: auto;
+	padding-top:2rem;
+	padding-bottom:2rem;
+	padding-right: 3rem;
+	padding-left: 3rem;
 }
 
 .infoMid {
@@ -69,25 +99,25 @@ body {
 	border-radius: 1rem;
 }
 
-.interior_aspect_child{
+.interior_aspect_child {
 	background-color: #18bea6;
 	margin: 0.5rem;
-	padding: 0.5rem; 
+	padding: 0.5rem;
 	height: 20%;
 	border-radius: 1rem;
 }
 
 ::-webkit-scrollbar {
-    width: 12px;
+	width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px grey; 
-  border-radius: 10px;
+	box-shadow: inset 0 0 5px grey;
+	border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #22e3c7; 
-  box-shadow: inset 0 0 5px grey; 
-  border-radius: 10px;
+	background: #22e3c7;
+	box-shadow: inset 0 0 5px grey;
+	border-radius: 10px;
 }
