@@ -154,6 +154,6 @@ body {
 }
 
 .content form .buttons input:active {
-	background-color: #ff4242;
+	background-color: #1bc284;
 	transform: translateY(4px);
 }
