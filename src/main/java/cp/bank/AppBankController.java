@@ -2,7 +2,6 @@ package cp.bank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,18 +11,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.LinkedList;
 import java.util.List;
 
-@Service
 @Controller
 public class AppBankController {
 
-	private Long persoanaLogata;
+	private Long loggedID;
 
 	@Autowired
-	public AccountRepository accountRepo;
+	private AccountService accountService;
 	@Autowired
-	public IstoricTransferRepository istoricRepo;
+	private HistoryAccountsService historyAccService;
 	@Autowired
-	public IstoricAccountsRepository istoricAccoutsRepo;
+	private HistoryTransfersService historyTranService;
 
 	@GetMapping("")
 	public String home() {
@@ -45,6 +43,7 @@ public class AppBankController {
 	public String loginUser(@RequestParam(value="userID", defaultValue="0") Long userID, @RequestParam("passwordUser") String passwordInput, Model model) {
 		model.addAttribute("userLogin", new UserLogin());
 		//restrictii in cazul inputurilor goale
+
 		if(userID == 0) {
 			System.out.println("Inputul de ID este gol");
 			model.addAttribute("loginPageMessage", "Incorrect ID.");
@@ -56,11 +55,11 @@ public class AppBankController {
 		}
 
 		//verificarea inputurilor pentru logarea utilizatorului
-		if(accountRepo.existsById(userID)) {
+		if(accountService.existID(userID)) {
 			System.out.println("Persoana este in baza de date.");
-			if(passwordInput.equals(accountRepo.findById(userID).get().getPassword())) {
+			if(passwordInput.equals(accountService.getUserPassword(userID))) {
 				System.err.println("Logare cu succes!");
-				persoanaLogata = userID;
+				loggedID = userID;
 				return deshboard(model);
 			}else {
 				System.out.println("Parola incorecta!");
@@ -87,7 +86,7 @@ public class AppBankController {
 	public String registerUser(Model model, @ModelAttribute Account newAccount) {
 		//model pentru crearea paginii de inregistrare in cazul redirectionarii
 		model.addAttribute("userRegistration", new Account());
-		List<Account> listAccounts = accountRepo.findAll(); 
+		List<Account> listAccounts = accountService.getAllUsers(); 
 		//restrictiile in cazul unui input gol
 		if(newAccount.firstName.isEmpty()) {
 			System.out.println("Invalid firstname");
@@ -115,7 +114,7 @@ public class AppBankController {
 			model.addAttribute("warningMessage", "Invalid CNP");
 			return "loginPages/registerPage";
 			//restrictii in cazul in care datele introduse sunt deja folosite de alt utilizator pentru crearea contului
-		}else if(accountRepo.existsById(newAccount.idCnp)){
+		}else if(accountService.existID(newAccount.idCnp)){
 			System.out.println("Persoana exista deja in baza de date.");
 			model.addAttribute("warningMessage", "CNP already used.");
 			return "loginPages/registerPage";
@@ -132,9 +131,9 @@ public class AppBankController {
 					return "loginPages/registerPage";
 				}
 			}
-			//salvarea in baza de date dupa verificari
-			accountRepo.save(newAccount);
-			//crearea paginii de login dupa realizarea cu succes a inregistrarii
+			//ssave new user to repository 
+			accountService.saveNewAccount(newAccount);
+			//create login page after successful registration
 			model.addAttribute("loginPageMessage", "Successful registration!");
 			model.addAttribute("userLogin", new UserLogin());
 			return ("loginPages/loginPage");
@@ -144,32 +143,32 @@ public class AppBankController {
 	@GetMapping("/deshboard")
 	public String deshboard(Model model) {
 
-		if(persoanaLogata == null) {
+		if(loggedID == null) {
 			model.addAttribute("loginPageMessage", "Please login!");
 			model.addAttribute("userLogin", new UserLogin());
 			return loginPage(model);
 		}
-		model.addAttribute("info_name", accountRepo.findById(persoanaLogata).get().firstName + " " + accountRepo.findById(persoanaLogata).get().lastName);
-		model.addAttribute("info_sold", accountRepo.findById(persoanaLogata).get().getSold());
+		model.addAttribute("info_name", accountService.getAccount(loggedID).get().firstName + " " + accountService.getAccount(loggedID).get().lastName);
+		model.addAttribute("info_sold", accountService.getAccount(loggedID).get().getSold());
 		model.addAttribute("transfer", new TransferToAccout());
-		if(istoricRepo.existsById(persoanaLogata))
-			model.addAttribute("listTransaction", istoricRepo.findById(persoanaLogata).get().getTransactions());
-		if(istoricAccoutsRepo.existsById(persoanaLogata))
-			model.addAttribute("listAccounts", istoricAccoutsRepo.findById(persoanaLogata).get().getIstoricAccounts());
-		System.out.println("Persoana logata: " + persoanaLogata);
+		if(historyTranService.existID(loggedID))
+			model.addAttribute("listTransaction", historyTranService.getHistoryTransfers(loggedID).get().getTransactions());
+		if(historyAccService.existID(loggedID))
+			model.addAttribute("listAccounts", historyAccService.getHistoryAccount(loggedID).get().getHistoryAccounts());
+		System.out.println("Persoana logata: " + loggedID);
 		return "loginPages/deshboard.html";
 	}
 
 	@GetMapping("/atm")
 	public String atm(Model model) {
-		if(persoanaLogata == null) {
+		if(loggedID == null) {
 			model.addAttribute("loginPageMessage", "Please login!");
 			model.addAttribute("userLogin", new UserLogin());
 			return "atm/loginAtm.html";
 		}
 		model.addAttribute("transfer", new TransferToAccout());
-		model.addAttribute("info_sold", accountRepo.findById(persoanaLogata).get().getSold());
-		model.addAttribute("info_name", accountRepo.findById(persoanaLogata).get().firstName + " " + accountRepo.findById(persoanaLogata).get().lastName);
+		model.addAttribute("info_sold", accountService.getAccount(loggedID).get().getSold());
+		model.addAttribute("info_name", accountService.getAccount(loggedID).get().firstName + " " + accountService.getAccount(loggedID).get().lastName);
 		return "atm/atm.html";
 	}
 
@@ -194,11 +193,11 @@ public class AppBankController {
 		}
 
 		//verificarea inputurilor pentru logarea utilizatorului
-		if(accountRepo.existsById(userID)) {
+		if(accountService.existID(userID)) {
 			System.out.println("Persoana este in baza de date.");
-			if(passwordInput.equals(accountRepo.findById(userID).get().getPassword())) {
+			if(passwordInput.equals(accountService.getAccount(userID).get().getPassword())) {
 				System.err.println("Logare cu succes!");
-				persoanaLogata = userID;
+				loggedID = userID;
 				return atm(model);
 			}else {
 				System.out.println("Parola incorecta!");
@@ -218,15 +217,15 @@ public class AppBankController {
 		if(newTransferToAccout.amound_toID == null) {
 			model.addAttribute("atmPageMessage", "Invalid amount!");
 			model.addAttribute("transfer", new TransferToAccout());
-			model.addAttribute("info_sold", accountRepo.findById(persoanaLogata).get().getSold());
-			model.addAttribute("info_name", accountRepo.findById(persoanaLogata).get().firstName + " " + accountRepo.findById(persoanaLogata).get().lastName);
+			model.addAttribute("info_sold", accountService.getAccount(loggedID).get().getSold());
+			model.addAttribute("info_name", accountService.getAccount(loggedID).get().firstName + " " + accountService.getAccount(loggedID).get().lastName);
 			return "atm/atm.html";
 		}else {
-			logicTransfer(persoanaLogata, newTransferToAccout.amound_toID, "Deposit");
+			logicTransfer(loggedID, newTransferToAccout.amound_toID, "Deposit");
 			model.addAttribute("atmPageMessage", "Successfully transferred!");
 			model.addAttribute("transfer", new TransferToAccout());
-			model.addAttribute("info_sold", accountRepo.findById(persoanaLogata).get().getSold());
-			model.addAttribute("info_name", accountRepo.findById(persoanaLogata).get().firstName + " " + accountRepo.findById(persoanaLogata).get().lastName);
+			model.addAttribute("info_sold", accountService.getAccount(loggedID).get().getSold());
+			model.addAttribute("info_name", accountService.getAccount(loggedID).get().firstName + " " + accountService.getAccount(loggedID).get().lastName);
 			return "atm/atm.html";
 		}
 	}
@@ -241,14 +240,14 @@ public class AppBankController {
 
 	@GetMapping("/logOut")
 	public String deshLogout(Model model) {
-		persoanaLogata = null;
+		loggedID = null;
 
 		model.addAttribute("userLogin", new UserLogin());
 		return "loginPages/loginPage";
 	}
 	@GetMapping("/logOutATM")
 	public String atmLogOut(Model model) {
-		persoanaLogata = null;
+		loggedID = null;
 		model.addAttribute("userLogin", new UserLogin());
 		return "atm/loginAtm.html";
 	}
@@ -264,7 +263,7 @@ public class AppBankController {
 			System.out.println("CNP invalid");
 			model.addAttribute("warning_transfer", "Invalid CNP!");
 			return deshboard(model);
-		}else if(newTransferToAccout.transfer_toID.equals(persoanaLogata)) {
+		}else if(newTransferToAccout.transfer_toID.equals(loggedID)) {
 			System.out.println("Nu poti sa faci un tranfer catre tine!");
 			model.addAttribute("warning_transfer", "Cannot make a transfer to you!");
 			return deshboard(model);
@@ -274,7 +273,7 @@ public class AppBankController {
 			model.addAttribute("warning_transfer", "Amount invalid!");
 			return deshboard(model);
 		}
-		if(!accountRepo.existsById(newTransferToAccout.transfer_toID)) {
+		if(!accountService.existID(newTransferToAccout.transfer_toID)) {
 			System.out.println("CNP doesn't exist");
 			model.addAttribute("warning_transfer", "CNP is not associated with a valid account!");
 			return deshboard(model);
@@ -282,7 +281,7 @@ public class AppBankController {
 		transferto_ID = newTransferToAccout.transfer_toID;
 		amountTransfer = newTransferToAccout.amound_toID;
 
-		if(accountRepo.findById(persoanaLogata).get().getSold() < amountTransfer) {
+		if(accountService.getAccount(loggedID).get().getSold() < amountTransfer) {
 			System.out.println("Suma de transferat este mai mare decat soldul contului.");
 			model.addAttribute("warning_transfer", "Not enough money!");
 			return deshboard(model);
@@ -305,85 +304,85 @@ public class AppBankController {
 		if(origin.equals("Deposit")) {
 			//adaugare suma in cont
 			Account newAccount_expeditor = new Account();
-			newAccount_expeditor.setEmail(accountRepo.findById(persoanaLogata).get().email);
-			newAccount_expeditor.setFirstName(accountRepo.findById(persoanaLogata).get().firstName);
-			newAccount_expeditor.setIdCnp(persoanaLogata);
-			newAccount_expeditor.setLastName(accountRepo.findById(persoanaLogata).get().lastName);
-			newAccount_expeditor.setPassword(accountRepo.findById(persoanaLogata).get().getPassword());
-			newAccount_expeditor.setPhoneNumber(accountRepo.findById(persoanaLogata).get().phoneNumber);
-			newAccount_expeditor.setSold((accountRepo.findById(persoanaLogata).get().getSold()) + amountTransfer);
-			accountRepo.save(newAccount_expeditor);
+			newAccount_expeditor.setEmail( accountService.getAccount(loggedID).get().email);
+			newAccount_expeditor.setFirstName(accountService.getAccount(loggedID).get().firstName);
+			newAccount_expeditor.setIdCnp(loggedID);
+			newAccount_expeditor.setLastName(accountService.getAccount(loggedID).get().lastName);
+			newAccount_expeditor.setPassword(accountService.getAccount(loggedID).get().getPassword());
+			newAccount_expeditor.setPhoneNumber(accountService.getAccount(loggedID).get().phoneNumber);
+			newAccount_expeditor.setSold((accountService.getAccount(loggedID).get().getSold()) + amountTransfer);
+			accountService.saveNewAccount(newAccount_expeditor);
 
 			//salvare informatie deposit in istoricul contului
 			String infoDeposit = "Deposit " + amountTransfer + "$";
-			if(istoricRepo.existsById(persoanaLogata)) {
-				newTransferRepo = new LinkedList<>(istoricRepo.findById(persoanaLogata).get().getTransactions());
+			if(historyTranService.existID(loggedID)) {
+				newTransferRepo = new LinkedList<>(historyTranService.getHistoryTransfers(loggedID).get().getTransactions());
 			}else {
 				newTransferRepo = new LinkedList<>();
 			}
 			newTransferRepo.add(infoDeposit);
-			istoricRepo.save(new IstoricTransfers(persoanaLogata, newTransferRepo));
+			historyTranService.saveNewTransactionsHistory(new HistoryTransfers(loggedID, newTransferRepo));;
 		}else if(origin.equals("Transfer")){
 			//adaugare suma in contul beneficiar
 			Account newAccount_beneficiar = new Account();
-			newAccount_beneficiar.setEmail(accountRepo.findById(transferto_ID).get().email);
-			newAccount_beneficiar.setFirstName(accountRepo.findById(transferto_ID).get().firstName);
+			newAccount_beneficiar.setEmail(accountService.getAccount(transferto_ID).get().email);
+			newAccount_beneficiar.setFirstName(accountService.getAccount(transferto_ID).get().firstName);
 			newAccount_beneficiar.setIdCnp(transferto_ID);
-			newAccount_beneficiar.setLastName(accountRepo.findById(transferto_ID).get().lastName);
-			newAccount_beneficiar.setPassword(accountRepo.findById(transferto_ID).get().getPassword());
-			newAccount_beneficiar.setPhoneNumber(accountRepo.findById(transferto_ID).get().phoneNumber);
-			newAccount_beneficiar.setSold((accountRepo.findById(transferto_ID).get().getSold()) + amountTransfer);
-			accountRepo.save(newAccount_beneficiar);
+			newAccount_beneficiar.setLastName(accountService.getAccount(transferto_ID).get().lastName);
+			newAccount_beneficiar.setPassword(accountService.getAccount(transferto_ID).get().getPassword());
+			newAccount_beneficiar.setPhoneNumber(accountService.getAccount(transferto_ID).get().phoneNumber);
+			newAccount_beneficiar.setSold((accountService.getAccount(transferto_ID).get().getSold()) + amountTransfer);
+			accountService.saveNewAccount(newAccount_beneficiar);
 
 			//scadere suma din contul expeditor
 			Account newAccount_expeditor = new Account();
-			newAccount_expeditor.setEmail(accountRepo.findById(persoanaLogata).get().email);
-			newAccount_expeditor.setFirstName(accountRepo.findById(persoanaLogata).get().firstName);
-			newAccount_expeditor.setIdCnp(persoanaLogata);
-			newAccount_expeditor.setLastName(accountRepo.findById(persoanaLogata).get().lastName);
-			newAccount_expeditor.setPassword(accountRepo.findById(persoanaLogata).get().getPassword());
-			newAccount_expeditor.setPhoneNumber(accountRepo.findById(persoanaLogata).get().phoneNumber);
-			newAccount_expeditor.setSold((accountRepo.findById(persoanaLogata).get().getSold()) - amountTransfer);
-			accountRepo.save(newAccount_expeditor);
+			newAccount_expeditor.setEmail(accountService.getAccount(loggedID).get().email);
+			newAccount_expeditor.setFirstName(accountService.getAccount(loggedID).get().firstName);
+			newAccount_expeditor.setIdCnp(loggedID);
+			newAccount_expeditor.setLastName(accountService.getAccount(loggedID).get().lastName);
+			newAccount_expeditor.setPassword(accountService.getAccount(loggedID).get().getPassword());
+			newAccount_expeditor.setPhoneNumber(accountService.getAccount(loggedID).get().phoneNumber);
+			newAccount_expeditor.setSold((accountService.getAccount(loggedID).get().getSold()) - amountTransfer);
+			accountService.saveNewAccount(newAccount_expeditor);
 
 			//salvarea informatiilor despre tranzactie in istoricul contului care a efectuat transferul
 			String infoTransaction = "Transferred " + amountTransfer + "$ to: " + newAccount_beneficiar.firstName 
 					+ " " + newAccount_beneficiar.lastName + "   ";
-			if(istoricRepo.existsById(persoanaLogata)) {
-				newTransferRepo = new LinkedList<>(istoricRepo.findById(persoanaLogata).get().getTransactions());
+			if(historyTranService.existID(loggedID)) {
+				newTransferRepo = new LinkedList<>(historyTranService.getHistoryTransfers(loggedID).get().getTransactions());
 			}else {
 				newTransferRepo = new LinkedList<>();
 			}
 			newTransferRepo.add(infoTransaction);
-			istoricRepo.save(new IstoricTransfers(persoanaLogata, newTransferRepo));
+			historyTranService.saveNewTransactionsHistory(new HistoryTransfers(loggedID, newTransferRepo));;
 
 			//salvare informatiilor despre tranzactie in istoricul contului caruia i se efectueaza transferul
 			String infoReceiveTransaction = "Receive " +amountTransfer +"$ from: "
 					+ newAccount_expeditor.firstName + " " + newAccount_expeditor.lastName;
-			if(istoricRepo.existsById(transferto_ID)) {
-				newTransferRepo = new LinkedList<>(istoricRepo.findById(transferto_ID).get().getTransactions());
+			if(historyTranService.existID(transferto_ID)) {
+				newTransferRepo = new LinkedList<>(historyTranService.getHistoryTransfers(transferto_ID).get().getTransactions());
 			}else {
 				newTransferRepo = new LinkedList<>();
 			}
 			newTransferRepo.add(infoReceiveTransaction);
-			istoricRepo.save(new IstoricTransfers(transferto_ID, newTransferRepo));
+			historyTranService.saveNewTransactionsHistory(new HistoryTransfers(transferto_ID, newTransferRepo));
 
 			//salvare persoana in istoricAccountsRepository - conturile cu care s-a interactionat in transferuri
 			String saveAccount_for_istoricAccountRepo = "[" + transferto_ID + "] : " + newAccount_beneficiar.firstName 
 					+ " " + newAccount_beneficiar.lastName + "  " ;
-			if(istoricAccoutsRepo.existsById(persoanaLogata)) {
+			if(historyAccService.existID(loggedID)) {
 				//in cazul in care persoana are deja un istoric de interactiuni cu alti utilizatori
 				//verificam daca persoana nu se afla dela in list ul cu persoane 
 				//transferto_ID - persoana nu care se face transferul
-				for(String acc:istoricAccoutsRepo.findById(persoanaLogata).get().istoricAccounts) {
+				for(String acc:historyAccService.getHistoryAccount(loggedID).get().getHistoryAccounts()) {
 					if(acc.contains(Long.toString(transferto_ID))){
 						inDataBase = true;
 					}
 				}
 				if(inDataBase == false) {
-					newAccountRepo = new LinkedList<>(istoricAccoutsRepo.findById(persoanaLogata).get().istoricAccounts);
+					newAccountRepo = new LinkedList<>(historyAccService.getHistoryAccount(loggedID).get().getHistoryAccounts());
 					newAccountRepo.add(saveAccount_for_istoricAccountRepo);
-					istoricAccoutsRepo.save(new IstoricAccounts(persoanaLogata, newAccountRepo));
+					historyAccService.saveNewAccountsHistory(new HistoryAccounts(loggedID, newAccountRepo));
 					System.out.println("Persoana noua introdusa in InfoAccountsRepo");
 				}
 			}else{
@@ -391,7 +390,7 @@ public class AppBankController {
 				//pregatire string de adaugat in db
 				newAccountRepo = new LinkedList<>();
 				newAccountRepo.add(saveAccount_for_istoricAccountRepo);
-				istoricAccoutsRepo.save(new IstoricAccounts(persoanaLogata, newAccountRepo));
+				historyAccService.saveNewAccountsHistory(new HistoryAccounts(loggedID, newAccountRepo));
 			}
 		}
 	}

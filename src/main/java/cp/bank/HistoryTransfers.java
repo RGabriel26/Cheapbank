@@ -6,19 +6,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class IstoricTransfers {
+public class HistoryTransfers {
 	
 	@Id
 	public Long ID;
 	public List<String> transactions;
 	
-	public IstoricTransfers(Long iD, List<String> transactions) {
+	public HistoryTransfers(Long iD, List<String> transactions) {
 
 		ID = iD;
 		this.transactions = transactions;
 	}
 	
-	public IstoricTransfers() {
+	public HistoryTransfers() {
 		
 	}
 
