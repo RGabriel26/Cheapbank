@@ -1,4 +1,4 @@
-package cp.bank;
+package cp.entity;
 
 public class UserLogin {
 	public Long userID;

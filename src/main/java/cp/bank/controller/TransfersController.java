@@ -1,216 +1,35 @@
-package cp.bank;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+package cp.bank.controller;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import cp.entity.Account;
+import cp.entity.HistoryAccounts;
+import cp.entity.HistoryTransfers;
+import cp.entity.TransferToAccout;
+
+import services.AccountService;
+import services.HistoryAccountsService;
+import services.HistoryTransfersService;
+
 @Controller
-public class AppBankController {
-
+public class TransfersController {
+	
 	private Long loggedID;
-
+	
+	
 	@Autowired
 	private AccountService accountService;
 	@Autowired
-	private HistoryAccountsService historyAccService;
-	@Autowired
 	private HistoryTransfersService historyTranService;
-
-	@GetMapping("")
-	public String home() {
-		return "loginPages/home";
-	}
-	@GetMapping("/home")
-	public String home1() {
-		return "loginPages/home";
-	}
-
-	@GetMapping("/loginPage")
-	public String loginPage(Model model) {
-		UserLogin user = new UserLogin();
-		model.addAttribute("userLogin", user);
-		return "loginPages/loginPage";
-	}
-
-	@PostMapping("/inputUser")
-	public String loginUser(@RequestParam(value="userID", defaultValue="0") Long userID, @RequestParam("passwordUser") String passwordInput, Model model) {
-		model.addAttribute("userLogin", new UserLogin());
-		//restrictii in cazul inputurilor goale
-
-		if(userID == 0) {
-			System.out.println("Inputul de ID este gol");
-			model.addAttribute("loginPageMessage", "Incorrect ID.");
-			return loginPage(model);
-		}else if(passwordInput == null) {
-			System.out.println("Input de password este gol");
-			model.addAttribute("loginPageMessage", "Incorrect password.");
-			return loginPage(model);
-		}
-
-		//verificarea inputurilor pentru logarea utilizatorului
-		if(accountService.existID(userID)) {
-			System.out.println("Persoana este in baza de date.");
-			if(passwordInput.equals(accountService.getUserPassword(userID))) {
-				System.err.println("Logare cu succes!");
-				loggedID = userID;
-				return deshboard(model);
-			}else {
-				System.out.println("Parola incorecta!");
-				model.addAttribute("loginPageMessage", "Incorrect password.");
-				model.addAttribute("userLogin", new UserLogin());
-				return loginPage(model);
-			}
-		}else {
-			System.out.println("Persoana nu este in baza de date.");
-			model.addAttribute("loginPageMessage", "Incorrect ID.");
-			return loginPage(model);
-		}
-	}
-
-	@GetMapping("/registerPage")
-	public String registerPage(Model model) {
-		Account account = new Account();
-		model.addAttribute("warningMessage", " ");
-		model.addAttribute("userRegistration", account);
-		return "loginPages/registerPage";
-	}
-
-	@PostMapping("/registrationUser")
-	public String registerUser(Model model, @ModelAttribute Account newAccount) {
-		//model pentru crearea paginii de inregistrare in cazul redirectionarii
-		model.addAttribute("userRegistration", new Account());
-		List<Account> listAccounts = accountService.getAllUsers(); 
-		//restrictiile in cazul unui input gol
-		if(newAccount.firstName.isEmpty()) {
-			System.out.println("Invalid firstname");
-			model.addAttribute("warningMessage", "Invalid firstname");
-			return "loginPages/registerPage";
-		}else if(newAccount.lastName.isEmpty()) {
-			System.out.println("Invalid lastname");
-			model.addAttribute("warningMessage", "Invalid lastname");
-			return "loginPages/registerPage";
-		}else if(newAccount.getPassword().isEmpty()) {
-			System.out.println("Invalid password.");
-			model.addAttribute("warningMessage", "Invalid password");
-			return "loginPages/registerPage";
-		}else if(newAccount.email.isEmpty()) {
-			System.out.println("Invalid email");
-			model.addAttribute("warningMessage", "Invalid email");
-			return "loginPages/registerPage";
-		}else if(newAccount.phoneNumber.isEmpty()) {
-			System.out.println("Invalid phonenumber");
-			model.addAttribute("warningMessage", "Invalid phone number");
-			return "loginPages/registerPage";
-		}else if(newAccount.idCnp==null) {
-			newAccount.setIdCnp(1l);
-			System.out.println("Invalid id");
-			model.addAttribute("warningMessage", "Invalid CNP");
-			return "loginPages/registerPage";
-			//restrictii in cazul in care datele introduse sunt deja folosite de alt utilizator pentru crearea contului
-		}else if(accountService.existID(newAccount.idCnp)){
-			System.out.println("Persoana exista deja in baza de date.");
-			model.addAttribute("warningMessage", "CNP already used.");
-			return "loginPages/registerPage";
-		}else {
-			for(Account acc:listAccounts) {
-				if(newAccount.email.equals(acc.email)){
-					System.out.println("Email deja folosit!");
-					model.addAttribute("warningMessage", "Email already used.");
-					return "loginPages/registerPage";
-				}
-				if(newAccount.phoneNumber.equals(acc.phoneNumber)) {
-					System.out.println("Numarul de telefon este deja folosut.");
-					model.addAttribute("warningMessage", "Phone number already used.");
-					return "loginPages/registerPage";
-				}
-			}
-			//ssave new user to repository 
-			accountService.saveNewAccount(newAccount);
-			//create login page after successful registration
-			model.addAttribute("loginPageMessage", "Successful registration!");
-			model.addAttribute("userLogin", new UserLogin());
-			return ("loginPages/loginPage");
-		}
-	}
-
-	@GetMapping("/deshboard")
-	public String deshboard(Model model) {
-
-		if(loggedID == null) {
-			model.addAttribute("loginPageMessage", "Please login!");
-			model.addAttribute("userLogin", new UserLogin());
-			return loginPage(model);
-		}
-		model.addAttribute("info_name", accountService.getAccount(loggedID).get().firstName + " " + accountService.getAccount(loggedID).get().lastName);
-		model.addAttribute("info_sold", accountService.getAccount(loggedID).get().getSold());
-		model.addAttribute("transfer", new TransferToAccout());
-		if(historyTranService.existID(loggedID))
-			model.addAttribute("listTransaction", historyTranService.getHistoryTransfers(loggedID).get().getTransactions());
-		if(historyAccService.existID(loggedID))
-			model.addAttribute("listAccounts", historyAccService.getHistoryAccount(loggedID).get().getHistoryAccounts());
-		System.out.println("Persoana logata: " + loggedID);
-		return "loginPages/deshboard.html";
-	}
-
-	@GetMapping("/atm")
-	public String atm(Model model) {
-		if(loggedID == null) {
-			model.addAttribute("loginPageMessage", "Please login!");
-			model.addAttribute("userLogin", new UserLogin());
-			return "atm/loginAtm.html";
-		}
-		model.addAttribute("transfer", new TransferToAccout());
-		model.addAttribute("info_sold", accountService.getAccount(loggedID).get().getSold());
-		model.addAttribute("info_name", accountService.getAccount(loggedID).get().firstName + " " + accountService.getAccount(loggedID).get().lastName);
-		return "atm/atm.html";
-	}
-
-	@GetMapping("/loginAtm")
-	public String atmLogin(Model model) {
-		model.addAttribute("userLogin", new UserLogin());
-		return "atm/loginAtm.html";
-
-	}
-	@PostMapping("/inputAtm")
-	public String loginAtm(@RequestParam(value="userID", defaultValue="0") Long userID, @RequestParam("passwordUser") String passwordInput, Model model) {
-		model.addAttribute("userLogin", new UserLogin());
-		//restrictii in cazul inputurilor goale
-		if(userID == 0) {
-			System.out.println("Inputul de ID este gol");
-			model.addAttribute("loginPageMessage", "Incorrect ID.");
-			return atmLogin(model);
-		}else if(passwordInput == null) {
-			System.out.println("Input de password este gol");
-			model.addAttribute("loginPageMessage", "Incorrect password.");
-			return atmLogin(model);
-		}
-
-		//verificarea inputurilor pentru logarea utilizatorului
-		if(accountService.existID(userID)) {
-			System.out.println("Persoana este in baza de date.");
-			if(passwordInput.equals(accountService.getAccount(userID).get().getPassword())) {
-				System.err.println("Logare cu succes!");
-				loggedID = userID;
-				return atm(model);
-			}else {
-				System.out.println("Parola incorecta!");
-				model.addAttribute("loginPageMessage", "Incorrect password.");
-				model.addAttribute("userLogin", new UserLogin());
-				return atmLogin(model);
-			}
-		}else {
-			System.out.println("Persoana nu este in baza de date.");
-			model.addAttribute("loginPageMessage", "Incorrect ID.");
-			return atmLogin(model);
-		}
-	}
+	@Autowired
+	private HistoryAccountsService historyAccService;
 
 	@PostMapping("/deposit")
 	public String deposit(Model model, @ModelAttribute TransferToAccout newTransferToAccout) {
@@ -230,28 +49,6 @@ public class AppBankController {
 		}
 	}
 
-	@GetMapping("/profil")
-	public String desgProfil(Model model) {
-
-
-
-		return "loginPages/profil-deshboard.html";
-	}
-
-	@GetMapping("/logOut")
-	public String deshLogout(Model model) {
-		loggedID = null;
-
-		model.addAttribute("userLogin", new UserLogin());
-		return "loginPages/loginPage";
-	}
-	@GetMapping("/logOutATM")
-	public String atmLogOut(Model model) {
-		loggedID = null;
-		model.addAttribute("userLogin", new UserLogin());
-		return "atm/loginAtm.html";
-	}
-
 	@PostMapping("/transfer_from_deshboard")
 	private String transferTo(Model model, @ModelAttribute TransferToAccout newTransferToAccout) {
 		Long transferto_ID;
@@ -262,21 +59,21 @@ public class AppBankController {
 		if(newTransferToAccout.transfer_toID==null) {
 			System.out.println("CNP invalid");
 			model.addAttribute("warning_transfer", "Invalid CNP!");
-			return deshboard(model);
+			return "loginPages/deshboard.html";
 		}else if(newTransferToAccout.transfer_toID.equals(loggedID)) {
 			System.out.println("Nu poti sa faci un tranfer catre tine!");
 			model.addAttribute("warning_transfer", "Cannot make a transfer to you!");
-			return deshboard(model);
+			return "loginPages/deshboard.html";
 		}
 		if(newTransferToAccout.amound_toID==null) {
 			System.out.println("Amount invalid");
 			model.addAttribute("warning_transfer", "Amount invalid!");
-			return deshboard(model);
+			return "loginPages/deshboard.html";
 		}
 		if(!accountService.existID(newTransferToAccout.transfer_toID)) {
 			System.out.println("CNP doesn't exist");
 			model.addAttribute("warning_transfer", "CNP is not associated with a valid account!");
-			return deshboard(model);
+			return "loginPages/deshboard.html";
 		}
 		transferto_ID = newTransferToAccout.transfer_toID;
 		amountTransfer = newTransferToAccout.amound_toID;
@@ -284,7 +81,7 @@ public class AppBankController {
 		if(accountService.getAccount(loggedID).get().getSold() < amountTransfer) {
 			System.out.println("Suma de transferat este mai mare decat soldul contului.");
 			model.addAttribute("warning_transfer", "Not enough money!");
-			return deshboard(model);
+			return "loginPages/deshboard.html";
 		}
 		//realizare transfer
 		logicTransfer(transferto_ID, amountTransfer, "Transfer");
@@ -292,7 +89,7 @@ public class AppBankController {
 
 		System.out.println("Transfer reusit.");
 		model.addAttribute("warning_transfer", "Successful transfer!");
-		return deshboard(model);
+		return "loginPages/deshboard.html";
 	}
 
 	private void logicTransfer(Long transferto_ID, Double amountTransfer, String origin) {
@@ -395,4 +192,3 @@ public class AppBankController {
 		}
 	}
 }
-

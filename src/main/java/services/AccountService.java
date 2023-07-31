@@ -1,4 +1,4 @@
-package cp.bank;
+package services;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,7 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+import cp.entity.Account;
+import repo.AccountRepository;
+
+@Service("account")
 public class AccountService {
 
 	@Autowired
@@ -30,6 +33,7 @@ public class AccountService {
 	}
 	
 	public String getUserPassword(Long ID) {
+		System.out.println("aici: " + ID);
 		return accountRepo.findById(ID).get().getPassword();
 	}
 	

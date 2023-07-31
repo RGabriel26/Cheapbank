@@ -1,4 +1,4 @@
-package cp.bank;
+package cp.entity;
 
 import java.util.List;
 

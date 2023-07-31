@@ -1,11 +1,14 @@
-package cp.bank;
+package services;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+import cp.entity.HistoryAccounts;
+import repo.HistoryAccountsRepository;
+
+@Service("historyAccounts")
 public class HistoryAccountsService {
 
 	@Autowired
