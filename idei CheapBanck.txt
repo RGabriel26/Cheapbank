@@ -1,0 +1,16 @@
+- Pagina de login/register (de pus in folderul static)
+- Pagini de control /admin
+		-prin intermediul careia ai acces sa vezi toate conturile bancii, inclusiv date despre detinatorii conturilor
+		-locul de setare al limitelor conturilor
+		-vedere de ansamblu a economiei
+- Pagina de deshboad a conturilor 
+- Pagina destinata bancomatelor de tip ATM
+
+
+**************************************************************************************
+* Conturile vor fi diferentiate in functie de un id reprezentand CNP ul utilizatorilor
+
+
+pastreaza toate call urile pentru pagini in acelasi file(acum sunt toate in LoginBankController)
+si fa sercive pentru partea de logica in cazul: -validarilor campurilor de input
+						-logicii de transfer

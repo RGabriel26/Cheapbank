@@ -1,7 +1,6 @@
-package services;
+package cp.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,7 @@ import repo.AccountRepository;
 @Service("account")
 public class AccountService {
 
-	@Autowired
+	@Autowired()
 	private AccountRepository accountRepo;
 	
 	
@@ -33,13 +32,30 @@ public class AccountService {
 	}
 	
 	public String getUserPassword(Long ID) {
-		System.out.println("aici: " + ID);
 		return accountRepo.findById(ID).get().getPassword();
 	}
 	
-	public Optional<Account> getAccount(Long ID) {
-		return accountRepo.findById(ID);
+	public String getUserFirstName(Long ID) {
+		return accountRepo.findById(ID).get().getFirstName();
 	}
+	
+	public String getUserLastName(Long ID) {
+		return accountRepo.findById(ID).get().getLastName();
+	}
+	
+	public Double getUserSold(Long ID) {
+		return accountRepo.findById(ID).get().getSold();
+	}
+	
+	public String getUserEmail(Long ID) {
+		return accountRepo.findById(ID).get().getEmail();
+	}
+	
+	public String getUserPhoneNumber(Long ID) {
+		return accountRepo.findById(ID).get().getPhoneNumber();
+	}
+	
+	
 	
 
 }

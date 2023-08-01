@@ -3,6 +3,8 @@ package cp.entity;
 import java.time.LocalDate;
 import java.time.Period;
 
+import org.springframework.stereotype.Component;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
