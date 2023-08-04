@@ -68,7 +68,7 @@ public class LoginBankController {
 		if(accountService.existID(userID)) {
 			System.out.println("Persoana este in baza de date.");
 			if(passwordInput.equals(accountService.getUserPassword(userID))) {
-				System.err.println("Logare cu succes!");
+				System.out.println("Logare cu succes!");
 				this.loggedID = userID;
 				cp.application.CheapBankApplication.loggedID = userID;
 				System.out.println("valoarea variabilei loggedid din application packege: " + cp.application.CheapBankApplication.loggedID);
