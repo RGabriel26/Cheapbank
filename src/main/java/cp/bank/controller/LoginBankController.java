@@ -24,7 +24,7 @@ import java.util.List;
 @Controller
 public class LoginBankController {
 
-	private Long loggedID = cp.application.CheapBankApplication.loggedID;
+	private Long loggedID;
 
 	@Autowired
 	private AccountService accountService;
@@ -70,8 +70,7 @@ public class LoginBankController {
 			if(passwordInput.equals(accountService.getUserPassword(userID))) {
 				System.out.println("Logare cu succes!");
 				this.loggedID = userID;
-				cp.application.CheapBankApplication.loggedID = userID;
-				System.out.println("valoarea variabilei loggedid din application packege: " + cp.application.CheapBankApplication.loggedID);
+				System.out.println("valoarea variabilei loggedid din application packege: " + loggedID);
 				//error
 				//				return "loginPages/deshboard.html";
 				return deshboard(model);
@@ -158,7 +157,6 @@ public class LoginBankController {
 
 	@GetMapping("/deshboard")
 	public String deshboard(Model model) {
-		Long loggedID = cp.application.CheapBankApplication.loggedID;
 		if(loggedID == null) {
 			model.addAttribute("loginPageMessage", "Please login!");
 			model.addAttribute("userLogin", new UserLogin());

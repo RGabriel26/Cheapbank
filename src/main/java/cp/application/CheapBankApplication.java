@@ -11,8 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("cp.entity")
 @SpringBootApplication(scanBasePackages = {"cp.bank.controller","cp.tempclass","cp.services"})
 public class CheapBankApplication {
-
-	public static Long loggedID = 0l;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CheapBankApplication.class, args);
